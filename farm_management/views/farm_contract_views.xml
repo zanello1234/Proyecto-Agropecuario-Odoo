@@ -47,7 +47,6 @@
                             <tree string="Campos" editable="bottom">
                                 <field name="name"/>
                                 <field name="total_area" readonly="1"/>
-                                <field name="province_id"/>
                                 <field name="location"/>
                             </tree>
                         </field>
