@@ -40,9 +40,9 @@
         'data/res_country_state_data.xml',
         
         # Views
+        'views/farm_contract_views.xml',
         'views/farm_field_views.xml',
         'views/farm_lot_views.xml', 
-        'views/farm_contract_views.xml',
         'views/menu_views.xml',
     ],
     'demo': [],
