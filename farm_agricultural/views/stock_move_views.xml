@@ -1,0 +1,247 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Aplicación de Insumo -->
+    <record id="view_stock_move_agricultural_form" model="ir.ui.view">
+        <field name="name">stock.move.agricultural.form</field>
+        <field name="model">stock.move</field>
+        <field name="inherit_id" ref="stock.view_move_form"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar información agrícola en la cabecera -->
+            <xpath expr="//field[@name='location_id']" position="after">
+                <field name="production_field_id" readonly="1"/>
+                <field name="production_lot_id" readonly="1"/>
+                <field name="production_area" readonly="1"/>
+            </xpath>
+            
+            <!-- Agregar pestaña de aplicación agrícola -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Aplicación Agrícola" name="agricultural_application">
+                    <group string="Información de Aplicación">
+                        <group>
+                            <field name="application_date"/>
+                            <field name="application_state"/>
+                            <field name="operator_id"/>
+                            <field name="application_equipment"/>
+                        </group>
+                        <group>
+                            <field name="cost_per_hectare" readonly="1"/>
+                            <field name="applied_dose_per_hectare" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Condiciones de Aplicación">
+                        <field name="application_weather" nolabel="1" 
+                               placeholder="Condiciones climáticas durante la aplicación..."/>
+                    </group>
+                    
+                    <group string="Observaciones">
+                        <field name="application_notes" nolabel="1" 
+                               placeholder="Notas adicionales sobre la aplicación..."/>
+                    </group>
+                    
+                    <div class="oe_button_box">
+                        <button name="action_mark_application_completed" 
+                                type="object" 
+                                string="Marcar Completada" 
+                                class="btn-primary"
+                                attrs="{'invisible': [('application_state', '=', 'completed')]}"/>
+                        <button name="action_mark_application_cancelled" 
+                                type="object" 
+                                string="Cancelar Aplicación" 
+                                class="btn-secondary"
+                                attrs="{'invisible': [('application_state', '=', 'cancelled')]}"/>
+                    </div>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Aplicaciones -->
+    <record id="view_stock_move_agricultural_tree" model="ir.ui.view">
+        <field name="name">stock.move.agricultural.tree</field>
+        <field name="model">stock.move</field>
+        <field name="arch" type="xml">
+            <tree string="Aplicaciones de Insumos" 
+                  decoration-success="application_state == 'completed'"
+                  decoration-warning="application_state == 'in_progress'"
+                  decoration-danger="application_state == 'cancelled'"
+                  decoration-muted="application_state == 'planned'">
+                <field name="production_field_id"/>
+                <field name="production_lot_id"/>
+                <field name="product_id"/>
+                <field name="quantity_done"/>
+                <field name="application_date"/>
+                <field name="cost_per_hectare"/>
+                <field name="applied_dose_per_hectare"/>
+                <field name="application_state"/>
+                <field name="operator_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda para Aplicaciones -->
+    <record id="view_stock_move_agricultural_search" model="ir.ui.view">
+        <field name="name">stock.move.agricultural.search</field>
+        <field name="model">stock.move</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Aplicaciones">
+                <field name="product_id" string="Insumo"/>
+                <field name="production_field_id" string="Campo"/>
+                <field name="production_lot_id" string="Lote"/>
+                <field name="operator_id" string="Operador"/>
+                
+                <separator/>
+                <filter string="Planificadas" name="planned" 
+                        domain="[('application_state', '=', 'planned')]"/>
+                <filter string="En Progreso" name="in_progress" 
+                        domain="[('application_state', '=', 'in_progress')]"/>
+                <filter string="Completadas" name="completed" 
+                        domain="[('application_state', '=', 'completed')]"/>
+                <filter string="Canceladas" name="cancelled" 
+                        domain="[('application_state', '=', 'cancelled')]"/>
+                
+                <separator/>
+                <filter string="Aplicaciones de Hoy" name="today" 
+                        domain="[('application_date', '=', context_today())]"/>
+                <filter string="Esta Semana" name="this_week" 
+                        domain="[('application_date', '&gt;=', (context_today() - datetime.timedelta(days=context_today().weekday())).strftime('%Y-%m-%d')),
+                                 ('application_date', '&lt;=', (context_today() + datetime.timedelta(days=6-context_today().weekday())).strftime('%Y-%m-%d'))]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Campo" name="group_by_field" 
+                            context="{'group_by': 'production_field_id'}"/>
+                    <filter string="Lote" name="group_by_lot" 
+                            context="{'group_by': 'production_lot_id'}"/>
+                    <filter string="Insumo" name="group_by_product" 
+                            context="{'group_by': 'product_id'}"/>
+                    <filter string="Estado" name="group_by_state" 
+                            context="{'group_by': 'application_state'}"/>
+                    <filter string="Operador" name="group_by_operator" 
+                            context="{'group_by': 'operator_id'}"/>
+                    <filter string="Fecha de Aplicación" name="group_by_date" 
+                            context="{'group_by': 'application_date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista Kanban para Aplicaciones -->
+    <record id="view_stock_move_agricultural_kanban" model="ir.ui.view">
+        <field name="name">stock.move.agricultural.kanban</field>
+        <field name="model">stock.move</field>
+        <field name="arch" type="xml">
+            <kanban string="Aplicaciones" default_group_by="application_state">
+                <field name="product_id"/>
+                <field name="production_field_id"/>
+                <field name="production_lot_id"/>
+                <field name="application_date"/>
+                <field name="application_state"/>
+                <field name="operator_id"/>
+                <field name="quantity_done"/>
+                <field name="applied_dose_per_hectare"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <strong><field name="product_id"/></strong>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="production_field_id"/> - <field name="production_lot_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Fecha:</strong> <field name="application_date"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Cantidad:</strong> <field name="quantity_done"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <strong>Operador:</strong> <field name="operator_id"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Dosis/ha:</strong> <field name="applied_dose_per_hectare"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="badge badge-pill">
+                                        <t t-if="record.application_state.raw_value == 'planned'">
+                                            <span class="badge-secondary">Planificada</span>
+                                        </t>
+                                        <t t-if="record.application_state.raw_value == 'in_progress'">
+                                            <span class="badge-warning">En Progreso</span>
+                                        </t>
+                                        <t t-if="record.application_state.raw_value == 'completed'">
+                                            <span class="badge-success">Completada</span>
+                                        </t>
+                                        <t t-if="record.application_state.raw_value == 'cancelled'">
+                                            <span class="badge-danger">Cancelada</span>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de Formulario para Detalle de Aplicación (StockMoveLine) -->
+    <record id="view_stock_move_line_agricultural_form" model="ir.ui.view">
+        <field name="name">stock.move.line.agricultural.form</field>
+        <field name="model">stock.move.line</field>
+        <field name="inherit_id" ref="stock.view_move_line_form"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//notebook" position="inside">
+                <page string="Detalle de Aplicación" name="application_detail">
+                    <group string="Ubicación Específica">
+                        <group>
+                            <field name="application_sector"/>
+                            <field name="gps_coordinates"/>
+                            <field name="soil_condition"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Condiciones Ambientales">
+                        <group>
+                            <field name="wind_speed"/>
+                            <field name="temperature"/>
+                            <field name="humidity"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Acción de Ventana para Aplicaciones Agrícolas -->
+    <record id="action_stock_move_agricultural" model="ir.actions.act_window">
+        <field name="name">Aplicaciones de Insumos</field>
+        <field name="res_model">stock.move</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('production_id', '!=', False)]</field>
+        <field name="context">{'search_default_completed': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡No hay aplicaciones registradas!
+            </p>
+            <p>
+                Las aplicaciones de insumos se crean automáticamente desde las órdenes de cultivo.
+                Registra el consumo de insumos en tus campañas para ver el seguimiento aquí.
+            </p>
+        </field>
+    </record>
+
+</odoo>

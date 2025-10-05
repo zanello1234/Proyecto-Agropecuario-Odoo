@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Productos de ejemplo para cultivos -->
+        <record id="product_soja" model="product.product">
+            <field name="name">Soja</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="standard_price">0.5</field>
+            <field name="list_price">1.0</field>
+        </record>
+        
+        <record id="product_maiz" model="product.product">
+            <field name="name">Maíz</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="standard_price">0.4</field>
+            <field name="list_price">0.8</field>
+        </record>
+        
+        <record id="product_trigo" model="product.product">
+            <field name="name">Trigo</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="standard_price">0.3</field>
+            <field name="list_price">0.6</field>
+        </record>
+        
+        <!-- Productos para insumos agrícolas -->
+        <record id="product_semilla_soja" model="product.product">
+            <field name="name">Semilla de Soja</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="standard_price">2.5</field>
+        </record>
+        
+        <record id="product_glifosato" model="product.product">
+            <field name="name">Glifosato</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="uom_id" ref="uom.product_uom_litre"/>
+            <field name="uom_po_id" ref="uom.product_uom_litre"/>
+            <field name="standard_price">8.0</field>
+        </record>
+        
+        <record id="product_fertilizante" model="product.product">
+            <field name="name">Fertilizante NPK</field>
+            <field name="type">product</field>
+            <field name="categ_id" ref="product.product_category_all"/>
+            <field name="uom_id" ref="uom.product_uom_kgm"/>
+            <field name="uom_po_id" ref="uom.product_uom_kgm"/>
+            <field name="standard_price">1.2</field>
+        </record>
+        
+        <!-- Plan de labores de ejemplo para Soja -->
+        <record id="bom_soja_plan" model="mrp.bom">
+            <field name="product_tmpl_id" ref="product_soja.product_template"/>
+            <field name="product_qty">1.0</field>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="type">normal</field>
+            <field name="is_agricultural_plan" eval="True"/>
+            <field name="crop_type">oilseed</field>
+            <field name="recommended_area_min">50</field>
+            <field name="recommended_area_max">500</field>
+            <field name="notes">Plan de labores estándar para cultivo de soja</field>
+        </record>
+        
+        <!-- Líneas del plan de labores para Soja -->
+        <record id="bom_line_soja_semilla" model="mrp.bom.line">
+            <field name="bom_id" ref="bom_soja_plan"/>
+            <field name="product_id" ref="product_semilla_soja"/>
+            <field name="product_qty">80</field>
+            <field name="product_uom_id" ref="uom.product_uom_kgm"/>
+            <field name="application_stage">planting</field>
+            <field name="application_method">broadcasting</field>
+            <field name="dose_per_hectare">80</field>
+            <field name="dose_unit">kg</field>
+            <field name="is_critical" eval="True"/>
+        </record>
+        
+        <record id="bom_line_soja_glifosato" model="mrp.bom.line">
+            <field name="bom_id" ref="bom_soja_plan"/>
+            <field name="product_id" ref="product_glifosato"/>
+            <field name="product_qty">3</field>
+            <field name="product_uom_id" ref="uom.product_uom_litre"/>
+            <field name="application_stage">pre_planting</field>
+            <field name="application_method">spraying</field>
+            <field name="dose_per_hectare">3</field>
+            <field name="dose_unit">l</field>
+            <field name="weather_dependent" eval="True"/>
+        </record>
+        
+        <record id="bom_line_soja_fertilizante" model="mrp.bom.line">
+            <field name="bom_id" ref="bom_soja_plan"/>
+            <field name="product_id" ref="product_fertilizante"/>
+            <field name="product_qty">150</field>
+            <field name="product_uom_id" ref="uom.product_uom_kgm"/>
+            <field name="application_stage">planting</field>
+            <field name="application_method">incorporation</field>
+            <field name="dose_per_hectare">150</field>
+            <field name="dose_unit">kg</field>
+            <field name="is_critical" eval="True"/>
+        </record>
+        
+        <!-- Unidades de medida adicionales -->
+        <record id="uom_hectare" model="uom.uom">
+            <field name="name">Hectárea</field>
+            <field name="category_id" ref="uom.uom_categ_length"/>
+            <field name="factor_inv">10000</field>
+            <field name="uom_type">bigger</field>
+            <field name="rounding">0.01</field>
+        </record>
+        
+    </data>
+</odoo>

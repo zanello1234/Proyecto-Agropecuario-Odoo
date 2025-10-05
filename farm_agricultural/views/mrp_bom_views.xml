@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Plan de Labores -->
+    <record id="view_mrp_bom_agricultural_form" model="ir.ui.view">
+        <field name="name">mrp.bom.agricultural.form</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar campos específicos agrícolas -->
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="is_agricultural_plan"/>
+                <field name="crop_type" attrs="{'invisible': [('is_agricultural_plan', '=', False)]}"/>
+            </xpath>
+            
+            <xpath expr="//field[@name='product_qty']" position="after">
+                <field name="recommended_area_min" 
+                       attrs="{'invisible': [('is_agricultural_plan', '=', False)]}"/>
+                <field name="recommended_area_max" 
+                       attrs="{'invisible': [('is_agricultural_plan', '=', False)]}"/>
+            </xpath>
+            
+            <!-- Modificar la vista de líneas para mostrar información agrícola -->
+            <xpath expr="//field[@name='bom_line_ids']//tree" position="attributes">
+                <attribute name="decoration-info">is_critical == True</attribute>
+                <attribute name="decoration-warning">weather_dependent == True</attribute>
+            </xpath>
+            
+            <xpath expr="//field[@name='bom_line_ids']//tree//field[@name='product_id']" position="after">
+                <field name="application_stage"/>
+                <field name="dose_per_hectare"/>
+                <field name="dose_unit"/>
+                <field name="application_date"/>
+                <field name="cost_per_hectare" readonly="1"/>
+                <field name="is_critical"/>
+            </xpath>
+            
+            <!-- Agregar pestaña de información agrícola -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Información Agrícola" name="agricultural_info" 
+                      attrs="{'invisible': [('is_agricultural_plan', '=', False)]}">
+                    <group>
+                        <field name="notes" nolabel="1" placeholder="Observaciones del plan de labores..."/>
+                    </group>
+                </page>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista de Formulario de Línea de Plan de Labores -->
+    <record id="view_mrp_bom_line_agricultural_form" model="ir.ui.view">
+        <field name="name">mrp.bom.line.agricultural.form</field>
+        <field name="model">mrp.bom.line</field>
+        <field name="arch" type="xml">
+            <form string="Insumo del Plan de Labores">
+                <sheet>
+                    <group>
+                        <group name="product_info">
+                            <field name="product_id"/>
+                            <field name="product_qty"/>
+                            <field name="product_uom_id"/>
+                        </group>
+                        <group name="agricultural_info">
+                            <field name="application_stage"/>
+                            <field name="application_method"/>
+                            <field name="application_date"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Dosificación">
+                        <group>
+                            <field name="dose_per_hectare"/>
+                            <field name="dose_unit"/>
+                            <field name="cost_per_hectare" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="is_critical"/>
+                            <field name="weather_dependent"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Planes de Labores -->
+    <record id="view_mrp_bom_agricultural_tree" model="ir.ui.view">
+        <field name="name">mrp.bom.agricultural.tree</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="crop_type" optional="hide"/>
+                <field name="is_agricultural_plan" optional="hide"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda para Planes de Labores -->
+    <record id="view_mrp_bom_agricultural_search" model="ir.ui.view">
+        <field name="name">mrp.bom.agricultural.search</field>
+        <field name="model">mrp.bom</field>
+        <field name="inherit_id" ref="mrp.view_mrp_bom_filter"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='product_tmpl_id']" position="after">
+                <field name="crop_type"/>
+            </xpath>
+            
+            <xpath expr="//filter[@name='inactive']" position="after">
+                <separator/>
+                <filter string="Planes Agrícolas" name="agricultural_plans" 
+                        domain="[('is_agricultural_plan', '=', True)]"/>
+                <filter string="Cereales" name="cereals" 
+                        domain="[('crop_type', '=', 'cereal')]"/>
+                <filter string="Oleaginosas" name="oilseeds" 
+                        domain="[('crop_type', '=', 'oilseed')]"/>
+                <filter string="Pasturas" name="pastures" 
+                        domain="[('crop_type', '=', 'pasture')]"/>
+                <filter string="Verdeos" name="verdeos" 
+                        domain="[('crop_type', '=', 'verdeo')]"/>
+            </xpath>
+            
+            <xpath expr="//group[@string='Group By']" position="inside">
+                <filter string="Tipo de Cultivo" name="group_by_crop_type" 
+                        context="{'group_by': 'crop_type'}"/>
+            </xpath>
+
+        </field>
+    </record>
+
+</odoo>
