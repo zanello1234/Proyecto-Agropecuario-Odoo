@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_farm_field_user,farm.field.user,model_farm_field,base.group_user,1,1,1,1
+access_farm_lot_user,farm.lot.user,model_farm_lot,base.group_user,1,1,1,1
+access_farm_contract_user,farm.contract.user,model_farm_contract,base.group_user,1,1,1,1
+access_farm_field_portal,farm.field.portal,model_farm_field,base.group_portal,1,0,0,0
+access_farm_lot_portal,farm.lot.portal,model_farm_lot,base.group_portal,1,0,0,0
+access_farm_contract_portal,farm.contract.portal,model_farm_contract,base.group_portal,1,0,0,0

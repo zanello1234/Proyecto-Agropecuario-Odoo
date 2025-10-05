@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Contrato -->
+    <record id="view_farm_contract_form" model="ir.ui.view">
+        <field name="name">farm.contract.form</field>
+        <field name="model">farm.contract</field>
+        <field name="arch" type="xml">
+            <form string="Contrato de Alquiler">
+                <header>
+                    <button name="action_activate" type="object" 
+                            string="Activar" class="btn-primary"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                    <button name="action_cancel" type="object" 
+                            string="Cancelar" class="btn-secondary"
+                            attrs="{'invisible': [('state', 'in', ['cancelled', 'draft'])]}"/>
+                    <button name="action_set_draft" type="object" 
+                            string="Volver a Borrador" class="btn-secondary"
+                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,active,expired"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="contract_info">
+                            <field name="landlord_id" options="{'no_create_edit': True}"/>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                            <field name="duration" readonly="1"/>
+                        </group>
+                        <group name="financial_info">
+                            <field name="payment_method"/>
+                            <field name="price"/>
+                            <field name="field_count" readonly="1"/>
+                            <field name="total_area" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Campos Asociados" name="fields">
+                        <field name="field_ids" nolabel="1">
+                            <tree string="Campos" editable="bottom">
+                                <field name="name"/>
+                                <field name="total_area" readonly="1"/>
+                                <field name="province_id"/>
+                                <field name="location"/>
+                            </tree>
+                        </field>
+                    </group>
+                    
+                    <group string="Observaciones" name="notes">
+                        <field name="notes" nolabel="1" placeholder="Detalles adicionales del contrato..."/>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Contratos -->
+    <record id="view_farm_contract_tree" model="ir.ui.view">
+        <field name="name">farm.contract.tree</field>
+        <field name="model">farm.contract</field>
+        <field name="arch" type="xml">
+            <tree string="Contratos de Alquiler" decoration-success="state=='active'" 
+                  decoration-danger="state=='expired'" decoration-muted="state=='cancelled'">
+                <field name="name"/>
+                <field name="landlord_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="duration"/>
+                <field name="payment_method"/>
+                <field name="price"/>
+                <field name="field_count"/>
+                <field name="total_area" sum="Total"/>
+                <field name="state" widget="badge" 
+                       decoration-success="state=='active'" 
+                       decoration-danger="state=='expired'"
+                       decoration-warning="state=='draft'"
+                       decoration-muted="state=='cancelled'"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda/Filtros -->
+    <record id="view_farm_contract_search" model="ir.ui.view">
+        <field name="name">farm.contract.search</field>
+        <field name="model">farm.contract</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Contratos">
+                <field name="name" string="Contrato"/>
+                <field name="landlord_id" string="Propietario"/>
+                <field name="payment_method"/>
+                <field name="state"/>
+                
+                <separator/>
+                <filter string="Borradores" name="draft" 
+                        domain="[('state', '=', 'draft')]"/>
+                <filter string="Activos" name="active" 
+                        domain="[('state', '=', 'active')]"/>
+                <filter string="Vencidos" name="expired" 
+                        domain="[('state', '=', 'expired')]"/>
+                <filter string="Cancelados" name="cancelled" 
+                        domain="[('state', '=', 'cancelled')]"/>
+                
+                <separator/>
+                <filter string="Vencen este Mes" name="expiring_this_month"
+                        domain="[('end_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
+                                 ('end_date', '&lt;=', (context_today() + relativedelta(day=31)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Vencen en 30 días" name="expiring_soon"
+                        domain="[('end_date', '&gt;=', context_today().strftime('%Y-%m-%d')),
+                                 ('end_date', '&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Estado" name="group_by_state" 
+                            context="{'group_by': 'state'}"/>
+                    <filter string="Propietario" name="group_by_landlord" 
+                            context="{'group_by': 'landlord_id'}"/>
+                    <filter string="Forma de Pago" name="group_by_payment" 
+                            context="{'group_by': 'payment_method'}"/>
+                    <filter string="Año de Inicio" name="group_by_year" 
+                            context="{'group_by': 'start_date:year'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista Kanban -->
+    <record id="view_farm_contract_kanban" model="ir.ui.view">
+        <field name="name">farm.contract.kanban</field>
+        <field name="model">farm.contract</field>
+        <field name="arch" type="xml">
+            <kanban string="Contratos">
+                <field name="name"/>
+                <field name="landlord_id"/>
+                <field name="state"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="total_area"/>
+                <field name="field_count"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="landlord_id"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Gestionar" title="Gestionar"/>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <a role="menuitem" type="edit" class="dropdown-item">Editar</a>
+                                    <a role="menuitem" type="delete" class="dropdown-item">Eliminar</a>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Inicio:</strong> <field name="start_date"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Fin:</strong> <field name="end_date"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-2">
+                                    <div class="col-6">
+                                        <strong>Campos:</strong> <field name="field_count"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Área:</strong> <field name="total_area"/> ha
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="badge badge-pill">
+                                        <t t-if="record.state.raw_value == 'draft'">
+                                            <span class="badge-warning">Borrador</span>
+                                        </t>
+                                        <t t-if="record.state.raw_value == 'active'">
+                                            <span class="badge-success">Activo</span>
+                                        </t>
+                                        <t t-if="record.state.raw_value == 'expired'">
+                                            <span class="badge-danger">Vencido</span>
+                                        </t>
+                                        <t t-if="record.state.raw_value == 'cancelled'">
+                                            <span class="badge-secondary">Cancelado</span>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana -->
+    <record id="action_farm_contract" model="ir.actions.act_window">
+        <field name="name">Contratos de Alquiler</field>
+        <field name="res_model">farm.contract</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_farm_contract_search"/>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Registra tu primer contrato de alquiler!
+            </p>
+            <p>
+                Los contratos de alquiler te permiten gestionar los campos que 
+                arriendas de terceros. Puedes controlar fechas, condiciones de pago, 
+                y asociar múltiples campos a un mismo contrato.
+            </p>
+        </field>
+    </record>
+
+    <!-- Acción de Formulario para crear contratos -->
+    <record id="action_farm_contract_form" model="ir.actions.act_window">
+        <field name="name">Nuevo Contrato</field>
+        <field name="res_model">farm.contract</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="view_farm_contract_form"/>
+        <field name="target">new</field>
+    </record>
+
+</odoo>

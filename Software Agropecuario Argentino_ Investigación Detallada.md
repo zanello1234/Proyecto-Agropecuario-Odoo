@@ -317,6 +317,140 @@ Finalmente, el futuro de la gestión agropecuaria estará cada vez más dominado
 
 En conclusión, no existe una "mejor" plataforma de software para todos. La elección correcta es una función directa de la estrategia, la escala, la complejidad y la cultura de cada empresa agropecuaria. La recomendación final para cualquier productor o administrador que evalúe una inversión tecnológica es realizar primero un profundo análisis interno de sus propios procesos, identificar sus principales puntos de dolor y definir sus prioridades estratégicas. Solo entonces, utilizando el marco y la información detallada en este informe, podrá tomar una decisión informada que no solo resuelva problemas actuales, sino que también posicione a su negocio para competir y prosperar en el futuro digital del campo argentino.
 
+---
+
+## **Anexo A: Prompt de Desarrollo - Módulo de Gestión de Campos para Odoo 18**
+
+### **1. Objetivo del Módulo**
+
+Desarrollar un módulo para Odoo 18 que permita la gestión integral de campos agrícolas, ya sean propios o alquilados. El módulo debe centralizar la información catastral, contractual, geográfica y productiva de los campos y sus subdivisiones (lotes), facilitando el control y la toma de decisiones.
+
+### **2. Modelos de Datos (Estructura de la Base de Datos)**
+
+Se deben crear los siguientes modelos principales:
+
+#### **a. Modelo: farm.field (Campo)**
+Este será el modelo principal para registrar cada campo.
+
+- **name**: `Char`. Nombre o identificador del campo (Ej: "La Margarita").
+- **field_type**: `Selection`. Tipo de tenencia: `[('own', 'Propio'), ('rented', 'Alquilado')]`. Requerido.
+- **contract_id**: `Many2one`. Relación con el modelo `farm.contract` (Contrato). Este campo será visible y requerido únicamente si `field_type` es 'Alquilado'.
+- **geolocation_points**: `Text` o `Char`. Para almacenar coordenadas geográficas (JSON o formato similar) que definan el perímetro del campo. Se utilizará para la vista de mapa.
+- **lot_ids**: `One2many`. Relación con el modelo `farm.lot` (Lotes). Pestaña para visualizar y crear los lotes que componen el campo.
+- **total_area**: `Float`. Extensión total del campo, calculada como la suma de las extensiones de sus lotes. Campo de solo lectura.
+- **province_id**: `Many2one`. Relación con `res.country.state` (Provincias de Argentina). Requerido.
+- **department**: `Char`. Departamento/Partido.
+- **location**: `Char`. Localidad o paraje más cercano.
+- **real_estate_id**: `Char`. Número de Partida Inmobiliaria.
+
+#### **b. Modelo: farm.lot (Lote)**
+Representa las subdivisiones operativas de un campo.
+
+- **name**: `Char`. Nombre o código del lote (Ej: "Lote 3A"). Requerido.
+- **field_id**: `Many2one`. Relación con `farm.field` (Campo al que pertenece). Requerido.
+- **area**: `Float`. Extensión del lote en hectáreas. Requerido.
+- **geolocation_points**: `Text` o `Char`. Coordenadas que definen el perímetro del lote para la vista de mapa.
+- **aptitude**: `Selection`. Aptitud del suelo: `[('agriculture', 'Agrícola'), ('livestock', 'Ganadero'), ('mixed', 'Mixto')]`.
+
+#### **c. Modelo: farm.contract (Contrato de Alquiler)**
+Gestiona la información legal y financiera de los campos alquilados.
+
+- **name**: `Char`. Generado automáticamente (Ej: "CONTRATO - [Nombre del Campo] - [Año]").
+- **landlord_id**: `Many2one`. Relación con `res.partner` (Propietario/Arrendador). El dominio debe filtrar por contactos que sean personas o empresas. Requerido.
+- **start_date**: `Date`. Fecha de inicio del contrato. Requerido.
+- **end_date**: `Date`. Fecha de finalización del contrato. Requerido.
+- **duration**: `Char`. Duración del contrato (calculado automáticamente en años/meses a partir de las fechas). Campo de solo lectura.
+- **payment_method**: `Selection`. Forma de pago: `[('cash', 'Efectivo'), ('quintals', 'Quintales de Soja'), ('percentage', 'Porcentaje de Cosecha'), ('other', 'Otro')]`. Requerido.
+- **price**: `Float`. Precio o valor del contrato, dependiendo de la forma de pago.
+- **notes**: `Text`. Campo para observaciones o detalles del contrato.
+
+### **3. Vistas y Experiencia de Usuario (UI/UX)**
+
+#### **a. Vistas de Campo (farm.field)**
+
+**Vista de Formulario:**
+- Organizar los campos en pestañas: "Información General", "Lotes", "Contrato" (visible si es alquilado).
+- **Integración con Google Maps**: Incluir una vista de mapa interactiva dentro del formulario que muestre el polígono del campo definido por `geolocation_points`. Debe permitir hacer zoom y navegar. Si es posible, al hacer clic en un lote dentro de la pestaña "Lotes", el mapa debería resaltar el polígono de ese lote.
+
+**Vista de Árbol/Lista:**
+- Columnas visibles: Nombre del Campo, Tipo (Propio/Alquilado), Extensión Total, Provincia, Ubicación.
+
+**Vista de Mapa:**
+- Una vista de mapa general que muestre todos los campos como polígonos sobre un mapa de Google Maps. Cada polígono debe ser "clicable" para abrir la vista de formulario correspondiente. El color del polígono podría variar si es propio o alquilado.
+
+#### **b. Vistas de Lote (farm.lot)**
+- La gestión principal se realizará desde la pestaña "Lotes" en la vista de formulario del campo.
+- **Vista de Árbol** simple dentro del formulario del campo: Columnas: Nombre del Lote, Extensión, Aptitud.
+
+#### **c. Vistas de Contrato (farm.contract)**
+
+**Vista de Formulario:**
+- Diseño claro con todos los campos del modelo.
+
+**Vista de Árbol/Lista:**
+- Columnas: Código de Contrato, Campo Asociado, Propietario, Fecha de Inicio, Fecha de Finalización, Forma de Pago.
+
+### **4. Funcionalidades y Lógica de Negocio**
+
+- **Cálculo Automático**: La extensión total del campo (`total_area`) debe actualizarse automáticamente cada vez que se cree, modifique o elimine un lote asociado. La duración del contrato (`duration`) también debe ser un campo calculado.
+
+- **Validaciones**:
+  - No permitir guardar un campo de tipo "Alquilado" sin un contrato asociado.
+  - La suma de las áreas de los lotes no debe exceder un límite lógico (opcional) o simplemente debe ser la base para el área total del campo.
+
+- **Geolocalización**: La funcionalidad de mapa es crucial. Se debe utilizar un widget de Odoo que se integre con la API de Google Maps (u otro proveedor como OpenStreetMap si se prefiere) para dibujar y visualizar los polígonos de campos y lotes.
+
+- **Menús**: Crear un menú principal llamado "Gestión de Campos" con submenús para "Campos", "Contratos de Alquiler" y "Configuración" (si fuera necesario en el futuro).
+
+### **5. Requisitos Técnicos**
+
+- **Versión de Odoo**: 18.0 Community o Enterprise.
+- **Dependencias**: `web_google_maps` o un módulo similar para la integración de mapas. La correcta gestión de claves de API debe ser considerada.
+- **Código**: El código debe seguir las directrices de la OCA (Odoo Community Association) para garantizar su calidad y mantenibilidad.
+
+### **6. Estructura del Módulo Sugerida**
+
+```
+farm_management/
+├── __init__.py
+├── __manifest__.py
+├── models/
+│   ├── __init__.py
+│   ├── farm_field.py
+│   ├── farm_lot.py
+│   └── farm_contract.py
+├── views/
+│   ├── farm_field_views.xml
+│   ├── farm_lot_views.xml
+│   ├── farm_contract_views.xml
+│   └── menu_views.xml
+├── security/
+│   └── ir.model.access.csv
+├── data/
+│   └── res_country_state_data.xml
+└── static/
+    └── description/
+        ├── icon.png
+        └── index.html
+```
+
+### **7. Casos de Uso Prioritarios**
+
+1. **Registro de Campo Propio**: Usuario crea un campo propio, define sus lotes y visualiza en mapa.
+2. **Registro de Campo Alquilado**: Usuario crea un campo alquilado, asocia contrato y gestiona información contractual.
+3. **Gestión de Lotes**: División de un campo en lotes operativos con diferentes aptitudes.
+4. **Visualización Geográfica**: Uso de la vista de mapa para localizar y gestionar campos geográficamente.
+5. **Control de Contratos**: Seguimiento de fechas de vencimiento y condiciones de alquiler.
+
+### **8. Consideraciones de Desarrollo**
+
+- **Escalabilidad**: El módulo debe estar preparado para manejar grandes cantidades de campos y lotes.
+- **Performance**: Las consultas de geolocalización deben estar optimizadas.
+- **Usabilidad**: La interfaz debe ser intuitiva para usuarios no técnicos.
+- **Integración**: Debe estar preparado para integrarse con otros módulos del sistema agropecuario (cultivos, ganadería, contabilidad).
+
+---
+
 #### **Obras citadas**
 
 1. Los mejores Software de Gestión Agropecuaria | Argentina \- ComparaSoftware, fecha de acceso: octubre 5, 2025, [https://www.comparasoftware.com.ar/administracion-agropecuaria](https://www.comparasoftware.com.ar/administracion-agropecuaria)  

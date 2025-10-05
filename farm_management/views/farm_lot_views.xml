@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Lote -->
+    <record id="view_farm_lot_form" model="ir.ui.view">
+        <field name="name">farm.lot.form</field>
+        <field name="model">farm.lot</field>
+        <field name="arch" type="xml">
+            <form string="Lote">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del Lote (ej: Lote 3A)"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="basic_info">
+                            <field name="field_id" options="{'no_create': True}"/>
+                            <field name="area"/>
+                            <field name="aptitude"/>
+                        </group>
+                        <group name="related_info">
+                            <field name="field_province_id" readonly="1"/>
+                            <field name="field_type" readonly="1"/>
+                            <field name="company_id" readonly="1" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Geolocalización" name="geolocation">
+                        <field name="geolocation_points" 
+                               placeholder='Ejemplo: [{"lat": -34.6037, "lng": -58.3816}]'
+                               help="Coordenadas en formato JSON que definen el perímetro del lote"/>
+                        <!-- Aquí se puede agregar un widget de mapa en el futuro -->
+                        <div class="alert alert-info" role="alert">
+                            <strong>Nota:</strong> La visualización del mapa será implementada 
+                            con el módulo de mapas correspondiente.
+                        </div>
+                    </group>
+                    
+                    <group string="Observaciones" name="notes">
+                        <field name="notes" nolabel="1" placeholder="Observaciones adicionales..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Lotes -->
+    <record id="view_farm_lot_tree" model="ir.ui.view">
+        <field name="name">farm.lot.tree</field>
+        <field name="model">farm.lot</field>
+        <field name="arch" type="xml">
+            <tree string="Lotes">
+                <field name="name"/>
+                <field name="field_id"/>
+                <field name="area" sum="Total"/>
+                <field name="aptitude"/>
+                <field name="field_province_id"/>
+                <field name="field_type" optional="hide"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda/Filtros -->
+    <record id="view_farm_lot_search" model="ir.ui.view">
+        <field name="name">farm.lot.search</field>
+        <field name="model">farm.lot</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Lotes">
+                <field name="name" string="Lote"/>
+                <field name="field_id" string="Campo"/>
+                <field name="aptitude"/>
+                <field name="field_province_id"/>
+                
+                <separator/>
+                <filter string="Agrícola" name="agriculture" 
+                        domain="[('aptitude', '=', 'agriculture')]"/>
+                <filter string="Ganadero" name="livestock" 
+                        domain="[('aptitude', '=', 'livestock')]"/>
+                <filter string="Mixto" name="mixed" 
+                        domain="[('aptitude', '=', 'mixed')]"/>
+                
+                <separator/>
+                <filter string="Activos" name="active_lots" 
+                        domain="[('active', '=', True)]"/>
+                <filter string="Archivados" name="inactive" 
+                        domain="[('active', '=', False)]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Campo" name="group_by_field" 
+                            context="{'group_by': 'field_id'}"/>
+                    <filter string="Aptitud" name="group_by_aptitude" 
+                            context="{'group_by': 'aptitude'}"/>
+                    <filter string="Provincia" name="group_by_province" 
+                            context="{'group_by': 'field_province_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista Kanban -->
+    <record id="view_farm_lot_kanban" model="ir.ui.view">
+        <field name="name">farm.lot.kanban</field>
+        <field name="model">farm.lot</field>
+        <field name="arch" type="xml">
+            <kanban string="Lotes">
+                <field name="name"/>
+                <field name="field_id"/>
+                <field name="area"/>
+                <field name="aptitude"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_secondary">
+                                        Campo: <field name="field_id"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="badge badge-pill">
+                                        <t t-if="record.aptitude.raw_value == 'agriculture'">
+                                            <span class="badge-success">Agrícola</span>
+                                        </t>
+                                        <t t-if="record.aptitude.raw_value == 'livestock'">
+                                            <span class="badge-info">Ganadero</span>
+                                        </t>
+                                        <t t-if="record.aptitude.raw_value == 'mixed'">
+                                            <span class="badge-warning">Mixto</span>
+                                        </t>
+                                        <t t-if="!record.aptitude.raw_value">
+                                            <span class="badge-secondary">Sin definir</span>
+                                        </t>
+                                    </span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <span class="text-muted">
+                                        <field name="area"/> ha
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana -->
+    <record id="action_farm_lot" model="ir.actions.act_window">
+        <field name="name">Lotes</field>
+        <field name="res_model">farm.lot</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_farm_lot_search"/>
+        <field name="context">{'search_default_active_lots': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Crea el primer lote!
+            </p>
+            <p>
+                Los lotes son las subdivisiones operativas de tus campos. 
+                Cada lote puede tener diferentes características y aptitudes 
+                según el tipo de actividad agropecuaria que planees desarrollar.
+            </p>
+        </field>
+    </record>
+
+</odoo>

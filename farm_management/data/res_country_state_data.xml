@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Provincias de Argentina -->
+        <!-- Nota: En una instalación estándar de Odoo, las provincias argentinas 
+             ya deberían estar incluidas. Este archivo sirve como backup o para 
+             asegurar que estén disponibles. -->
+        
+        <record id="state_ar_buenos_aires" model="res.country.state">
+            <field name="name">Buenos Aires</field>
+            <field name="code">BA</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_catamarca" model="res.country.state">
+            <field name="name">Catamarca</field>
+            <field name="code">CT</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_chaco" model="res.country.state">
+            <field name="name">Chaco</field>
+            <field name="code">CC</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_chubut" model="res.country.state">
+            <field name="name">Chubut</field>
+            <field name="code">CH</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_cordoba" model="res.country.state">
+            <field name="name">Córdoba</field>
+            <field name="code">CB</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_corrientes" model="res.country.state">
+            <field name="name">Corrientes</field>
+            <field name="code">CN</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_entre_rios" model="res.country.state">
+            <field name="name">Entre Ríos</field>
+            <field name="code">ER</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_formosa" model="res.country.state">
+            <field name="name">Formosa</field>
+            <field name="code">FM</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_jujuy" model="res.country.state">
+            <field name="name">Jujuy</field>
+            <field name="code">JY</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_la_pampa" model="res.country.state">
+            <field name="name">La Pampa</field>
+            <field name="code">LP</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_la_rioja" model="res.country.state">
+            <field name="name">La Rioja</field>
+            <field name="code">LR</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_mendoza" model="res.country.state">
+            <field name="name">Mendoza</field>
+            <field name="code">MZ</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_misiones" model="res.country.state">
+            <field name="name">Misiones</field>
+            <field name="code">MN</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_neuquen" model="res.country.state">
+            <field name="name">Neuquén</field>
+            <field name="code">NQ</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_rio_negro" model="res.country.state">
+            <field name="name">Río Negro</field>
+            <field name="code">RN</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_salta" model="res.country.state">
+            <field name="name">Salta</field>
+            <field name="code">SA</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_san_juan" model="res.country.state">
+            <field name="name">San Juan</field>
+            <field name="code">SJ</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_san_luis" model="res.country.state">
+            <field name="name">San Luis</field>
+            <field name="code">SL</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_santa_cruz" model="res.country.state">
+            <field name="name">Santa Cruz</field>
+            <field name="code">SC</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_santa_fe" model="res.country.state">
+            <field name="name">Santa Fe</field>
+            <field name="code">SF</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_santiago_del_estero" model="res.country.state">
+            <field name="name">Santiago del Estero</field>
+            <field name="code">SE</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_tierra_del_fuego" model="res.country.state">
+            <field name="name">Tierra del Fuego</field>
+            <field name="code">TF</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <record id="state_ar_tucuman" model="res.country.state">
+            <field name="name">Tucumán</field>
+            <field name="code">TM</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+        <!-- Ciudad Autónoma de Buenos Aires -->
+        <record id="state_ar_caba" model="res.country.state">
+            <field name="name">Ciudad Autónoma de Buenos Aires</field>
+            <field name="code">CF</field>
+            <field name="country_id" ref="base.ar"/>
+        </record>
+        
+    </data>
+</odoo>

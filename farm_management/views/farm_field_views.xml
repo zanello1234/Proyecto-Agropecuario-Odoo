@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Campo -->
+    <record id="view_farm_field_form" model="ir.ui.view">
+        <field name="name">farm.field.form</field>
+        <field name="model">farm.field</field>
+        <field name="arch" type="xml">
+            <form string="Campo Agropecuario">
+                <header>
+                    <field name="active" invisible="1"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre del Campo"/>
+                        </h1>
+                    </div>
+                    
+                    <notebook>
+                        <!-- Pestaña: Información General -->
+                        <page string="Información General" name="general">
+                            <group>
+                                <group name="basic_info">
+                                    <field name="field_type" widget="radio"/>
+                                    <field name="contract_id" 
+                                           attrs="{'invisible': [('field_type', '!=', 'rented')], 
+                                                   'required': [('field_type', '=', 'rented')]}"/>
+                                    <field name="total_area" readonly="1"/>
+                                </group>
+                                <group name="location_info">
+                                    <field name="province_id" 
+                                           options="{'no_create': True, 'no_create_edit': True}"/>
+                                    <field name="department"/>
+                                    <field name="location"/>
+                                    <field name="real_estate_id"/>
+                                </group>
+                            </group>
+                            
+                            <!-- Sección de Mapa -->
+                            <group string="Geolocalización" name="geolocation">
+                                <field name="geolocation_points" 
+                                       placeholder='Ejemplo: [{"lat": -34.6037, "lng": -58.3816}]'
+                                       help="Coordenadas en formato JSON que definen el perímetro del campo"/>
+                                <!-- Aquí se puede agregar un widget de mapa en el futuro -->
+                                <div class="alert alert-info" role="alert">
+                                    <strong>Nota:</strong> La visualización del mapa será implementada 
+                                    con el módulo de mapas correspondiente.
+                                </div>
+                            </group>
+                            
+                            <group string="Observaciones" name="notes">
+                                <field name="notes" nolabel="1" placeholder="Observaciones adicionales..."/>
+                            </group>
+                        </page>
+                        
+                        <!-- Pestaña: Lotes -->
+                        <page string="Lotes" name="lots">
+                            <field name="lot_ids">
+                                <tree string="Lotes del Campo" editable="bottom">
+                                    <field name="name"/>
+                                    <field name="area"/>
+                                    <field name="aptitude"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                        
+                        <!-- Pestaña: Contrato (solo visible si es alquilado) -->
+                        <page string="Contrato" name="contract" 
+                              attrs="{'invisible': [('field_type', '!=', 'rented')]}">
+                            <div attrs="{'invisible': [('contract_id', '!=', False)]}">
+                                <p class="alert alert-warning">
+                                    <strong>Atención:</strong> Este campo está marcado como alquilado 
+                                    pero no tiene un contrato asociado. 
+                                    <button name="%(action_farm_contract_form)d" 
+                                            type="action" 
+                                            string="Crear Contrato" 
+                                            class="btn-link"/>
+                                </p>
+                            </div>
+                            <div attrs="{'invisible': [('contract_id', '=', False)]}">
+                                <group>
+                                    <field name="contract_id" readonly="1"/>
+                                </group>
+                                <button name="action_open_contract" 
+                                        type="object" 
+                                        string="Ver Detalles del Contrato" 
+                                        class="btn btn-primary"
+                                        attrs="{'invisible': [('contract_id', '=', False)]}"/>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Campos -->
+    <record id="view_farm_field_tree" model="ir.ui.view">
+        <field name="name">farm.field.tree</field>
+        <field name="model">farm.field</field>
+        <field name="arch" type="xml">
+            <tree string="Campos Agropecuarios">
+                <field name="name"/>
+                <field name="field_type"/>
+                <field name="total_area" sum="Total"/>
+                <field name="province_id"/>
+                <field name="location"/>
+                <field name="contract_id" optional="hide"/>
+                <field name="active" invisible="1"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda/Filtros -->
+    <record id="view_farm_field_search" model="ir.ui.view">
+        <field name="name">farm.field.search</field>
+        <field name="model">farm.field</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Campos">
+                <field name="name" string="Campo" 
+                       filter_domain="['|', ('name', 'ilike', self), ('location', 'ilike', self)]"/>
+                <field name="province_id"/>
+                <field name="field_type"/>
+                <field name="contract_id"/>
+                
+                <separator/>
+                <filter string="Campos Propios" name="own_fields" 
+                        domain="[('field_type', '=', 'own')]"/>
+                <filter string="Campos Alquilados" name="rented_fields" 
+                        domain="[('field_type', '=', 'rented')]"/>
+                <filter string="Activos" name="active_fields" 
+                        domain="[('active', '=', True)]"/>
+                
+                <separator/>
+                <filter string="Archivados" name="inactive" 
+                        domain="[('active', '=', False)]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Tipo de Tenencia" name="group_by_type" 
+                            context="{'group_by': 'field_type'}"/>
+                    <filter string="Provincia" name="group_by_province" 
+                            context="{'group_by': 'province_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Vista Kanban -->
+    <record id="view_farm_field_kanban" model="ir.ui.view">
+        <field name="name">farm.field.kanban</field>
+        <field name="model">farm.field</field>
+        <field name="arch" type="xml">
+            <kanban string="Campos">
+                <field name="name"/>
+                <field name="field_type"/>
+                <field name="total_area"/>
+                <field name="province_id"/>
+                <field name="location"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="province_id"/> - <field name="location"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Gestionar" title="Gestionar"/>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <a role="menuitem" type="edit" class="dropdown-item">Editar</a>
+                                    <a role="menuitem" type="delete" class="dropdown-item">Eliminar</a>
+                                </div>
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="badge badge-pill">
+                                        <t t-if="record.field_type.raw_value == 'own'">
+                                            <span class="badge-success">Propio</span>
+                                        </t>
+                                        <t t-if="record.field_type.raw_value == 'rented'">
+                                            <span class="badge-warning">Alquilado</span>
+                                        </t>
+                                    </span>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <span class="text-muted">
+                                        <field name="total_area"/> ha
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana -->
+    <record id="action_farm_field" model="ir.actions.act_window">
+        <field name="name">Campos</field>
+        <field name="res_model">farm.field</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="view_farm_field_search"/>
+        <field name="context">{'search_default_active_fields': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Registra tu primer campo!
+            </p>
+            <p>
+                Los campos son la base de tu gestión agropecuaria. 
+                Aquí puedes registrar tanto campos propios como alquilados, 
+                definir su ubicación geográfica y dividirlos en lotes operativos.
+            </p>
+        </field>
+    </record>
+
+</odoo>
