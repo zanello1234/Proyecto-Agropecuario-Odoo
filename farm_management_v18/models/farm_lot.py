@@ -86,9 +86,10 @@ class FarmLot(models.Model):
                     ('id', '!=', record.id)
                 ])
                 if existing:
+                    field_name = record.field_id.name if record.field_id else 'campo desconocido'
                     raise ValidationError(
                         f"Ya existe un lote con el nombre '{record.name}' "
-                        f"en el campo '{record.field_id.name}'."
+                        f"en el campo '{field_name}'."
                     )
     
     def validate_geolocation_points(self):

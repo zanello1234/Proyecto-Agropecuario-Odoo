@@ -131,7 +131,7 @@ class FarmField(models.Model):
         result = []
         for record in self:
             name = f"{record.name}"
-            if record.province_id:
+            if record.province_id and record.province_id.name:
                 name += f" ({record.province_id.name})"
             result.append((record.id, name))
         return result

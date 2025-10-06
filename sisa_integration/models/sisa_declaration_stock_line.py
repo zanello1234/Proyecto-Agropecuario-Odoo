@@ -99,6 +99,8 @@ class SisaDeclarationStockLine(models.Model):
         """Custom name_get for better display"""
         result = []
         for record in self:
-            name = f"{record.product_id.name} - {record.location_id.name} ({record.quantity_kg:,.0f} kg)"
+            product_name = record.product_id.name if record.product_id else 'Sin producto'
+            location_name = record.location_id.name if record.location_id else 'Sin ubicación'
+            name = f"{product_name} - {location_name} ({record.quantity_kg:,.0f} kg)"
             result.append((record.id, name))
         return result
