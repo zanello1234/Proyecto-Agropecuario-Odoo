@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        
+        <!-- Campaña agrícola de demostración -->
+        <record id="campaign_demo_2024" model="mrp.production">
+            <field name="name">Campaña Soja 2024 - Lote Norte</field>
+            <field name="product_id" ref="product_soja"/>
+            <field name="product_qty">2500</field>
+            <field name="product_uom_id" ref="uom.product_uom_kgm"/>
+            <field name="bom_id" ref="bom_soja_plan"/>
+            <field name="crop_cycle">summer</field>
+            <field name="planting_date" eval="(DateTime.now() + relativedelta(months=1)).strftime('%Y-%m-%d')"/>
+            <field name="expected_harvest_date" eval="(DateTime.now() + relativedelta(months=5)).strftime('%Y-%m-%d')"/>
+            <field name="area_hectares">50</field>
+            <field name="target_yield">3500</field>
+            <field name="irrigation_required" eval="False"/>
+            <field name="state">confirmed</field>
+            <field name="notes">Campaña de demostración para cultivo de soja en lote norte de 50 hectáreas</field>
+        </record>
+        
+        <!-- Movimientos de stock de ejemplo (aplicaciones) -->
+        <record id="stock_move_demo_semilla" model="stock.move">
+            <field name="name">Aplicación Semilla Soja - Demo</field>
+            <field name="product_id" ref="product_semilla_soja"/>
+            <field name="product_uom_qty">4000</field>
+            <field name="product_uom" ref="uom.product_uom_kgm"/>
+            <field name="production_id" ref="campaign_demo_2024"/>
+            <field name="application_stage">planting</field>
+            <field name="application_method">broadcasting</field>
+            <field name="application_rate">80</field>
+            <field name="application_unit">kg/ha</field>
+            <field name="weather_conditions">Favorable - Sin viento</field>
+            <field name="operator">Demo Operator</field>
+            <field name="equipment_used">Sembradora John Deere 1770</field>
+            <field name="state">assigned</field>
+        </record>
+        
+        <record id="stock_move_demo_fertilizante" model="stock.move">
+            <field name="name">Aplicación Fertilizante - Demo</field>
+            <field name="product_id" ref="product_fertilizante"/>
+            <field name="product_uom_qty">7500</field>
+            <field name="product_uom" ref="uom.product_uom_kgm"/>
+            <field name="production_id" ref="campaign_demo_2024"/>
+            <field name="application_stage">planting</field>
+            <field name="application_method">incorporation</field>
+            <field name="application_rate">150</field>
+            <field name="application_unit">kg/ha</field>
+            <field name="weather_conditions">Condiciones normales</field>
+            <field name="operator">Demo Operator</field>
+            <field name="equipment_used">Fertilizadora Amazone</field>
+            <field name="state">assigned</field>
+        </record>
+        
+    </data>
+</odoo>

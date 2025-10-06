@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Orden de Cultivo -->
+    <record id="view_mrp_production_agricultural_form" model="ir.ui.view">
+        <field name="name">mrp.production.agricultural.form</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
+        <field name="arch" type="xml">
+            
+            <!-- Agregar campos específicos agrícolas en la cabecera -->
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="field_id" options="{'no_create': True}"/>
+                <field name="lot_id" options="{'no_create': True}" 
+                       domain="[('field_id', '=', field_id)]"/>
+                <field name="crop_id" options="{'no_create': True}"/>
+                <field name="area"/>
+                <field name="is_pasture_or_verdeo"/>
+                <field name="asset_id" readonly="1" 
+                       invisible="asset_id == False"/>
+            </xpath>
+
+            <!-- Modificar la vista para mostrar información agrícola -->
+            <!-- Comentado temporalmente: campos relacionados que pueden causar problemas
+            <xpath expr="//field[@name='origin']" position="after">
+                <field name="field_province_id" readonly="1"/>
+                <field name="lot_aptitude" readonly="1"/>
+            </xpath>
+            -->
+
+            <!-- Agregar pestaña de Seguimiento Agrícola -->
+            <xpath expr="//notebook" position="inside">
+                <page string="Seguimiento Agrícola" name="agricultural_tracking">
+                    <group string="Fechas del Ciclo Agrícola">
+                        <group>
+                            <field name="date_fallow"/>
+                            <field name="date_planting"/>
+                            <field name="date_harvest"/>
+                        </group>
+                        <group>
+                            <field name="campaign_duration" readonly="1"/>
+                            <field name="total_cost" readonly="1"/>
+                            <field name="cost_per_hectare" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Datos de Cosecha">
+                        <group>
+                            <field name="total_harvest_kg"/>
+                            <field name="yield_per_hectare" readonly="1"/>
+                        </group>
+                        <group>
+                            <!-- Botón para crear activo si es pastura/verdeo -->
+                            <button name="action_create_asset_for_pasture" 
+                                    type="object" 
+                                    string="Crear Activo"
+                                    class="btn-primary"
+                                    invisible="not is_pasture_or_verdeo or asset_id != False"/>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+
+            <!-- Modificar la pestaña de componentes para mostrar información agrícola -->
+            <xpath expr="//field[@name='move_raw_ids']//list" position="attributes">
+                <attribute name="decoration-success">application_state == 'completed'</attribute>
+                <attribute name="decoration-warning">application_state == 'in_progress'</attribute>
+                <attribute name="decoration-muted">application_state == 'cancelled'</attribute>
+            </xpath>
+            
+            <xpath expr="//field[@name='move_raw_ids']//list//field[@name='product_id']" position="after">
+                <field name="application_date"/>
+                <field name="cost_per_hectare" readonly="1"/>
+                <field name="applied_dose_per_hectare" readonly="1"/>
+                <field name="application_state"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Órdenes de Cultivo -->
+    <record id="view_mrp_production_agricultural_list" model="ir.ui.view">
+        <field name="name">mrp.production.agricultural.list</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="field_id" optional="show"/>
+                <field name="lot_id" optional="show"/>
+                <field name="crop_id" optional="show"/>
+                <field name="area" optional="show" sum="Total"/>
+            </xpath>
+            
+            <!-- Comentado temporalmente: campo date_planned_start no encontrado en Odoo 18
+            <xpath expr="//field[@name='date_planned_start']" position="after">
+                <field name="date_planting" optional="hide"/>
+                <field name="date_harvest" optional="hide"/>
+                <field name="yield_per_hectare" optional="hide"/>
+            </xpath>
+            -->
+            
+            <xpath expr="//field[@name='state']" position="before">
+                <field name="is_pasture_or_verdeo" optional="hide"/>
+            </xpath>
+
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda para Órdenes de Cultivo -->
+    <record id="view_mrp_production_agricultural_search" model="ir.ui.view">
+        <field name="name">mrp.production.agricultural.search</field>
+        <field name="model">mrp.production</field>
+        <field name="inherit_id" ref="mrp.view_mrp_production_filter"/>
+        <field name="arch" type="xml">
+            
+            <xpath expr="//field[@name='name']" position="after">
+                <field name="field_id" string="Campo"/>
+                <field name="lot_id" string="Lote"/>
+                <field name="crop_id" string="Cultivo"/>
+            </xpath>
+            
+            <xpath expr="//filter[@name='late']" position="after">
+                <separator/>
+                <filter string="Pasturas/Verdeos" name="pastures" 
+                        domain="[('is_pasture_or_verdeo', '=', True)]"/>
+                <filter string="Granos" name="grains" 
+                        domain="[('is_pasture_or_verdeo', '=', False)]"/>
+                <filter string="Con Cosecha Registrada" name="harvested" 
+                        domain="[('total_harvest_kg', '>', 0)]"/>
+                <filter string="Pendientes de Cosecha" name="pending_harvest" 
+                        domain="[('date_harvest', '=', False), ('state', 'in', ['progress', 'to_close'])]"/>
+            </xpath>
+            
+            <!-- Error #15: Odoo 18 prohibits xpath selectors with @string attribute -->
+            <!-- Temporarily commented for installation - will restore with alternative approach -->
+            <!-- <xpath expr="//group[@string='Group By']" position="inside">
+                <filter string="Campo" name="group_by_field" 
+                        context="{'group_by': 'field_id'}"/>
+                <filter string="Cultivo" name="group_by_crop" 
+                        context="{'group_by': 'crop_id'}"/>
+                <filter string="Tipo (Pastura/Grano)" name="group_by_type" 
+                        context="{'group_by': 'is_pasture_or_verdeo'}"/>
+            </xpath> -->
+
+        </field>
+    </record>
+
+    <!-- Vista Kanban para Órdenes de Cultivo -->
+    <record id="view_mrp_production_agricultural_kanban" model="ir.ui.view">
+        <field name="name">mrp.production.agricultural.kanban</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <kanban string="Órdenes de Cultivo" default_group_by="state">
+                <field name="name"/>
+                <field name="field_id"/>
+                <field name="lot_id"/>
+                <field name="crop_id"/>
+                <field name="area"/>
+                <field name="state"/>
+                <field name="date_planting"/>
+                <field name="date_harvest"/>
+                <field name="yield_per_hectare"/>
+                <field name="is_pasture_or_verdeo"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_card_header">
+                                <div class="o_kanban_card_header_title">
+                                    <div class="o_primary">
+                                        <strong><field name="name"/></strong>
+                                    </div>
+                                    <div class="o_secondary">
+                                        <field name="field_id"/> - <field name="lot_id"/>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_manage_button_section">
+                                    <a class="o_kanban_manage_toggle_button" href="#">
+                                        <i class="fa fa-ellipsis-v" role="img" aria-label="Gestionar" title="Gestionar"/>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="o_kanban_card_content">
+                                <div class="o_kanban_card_manage_pane dropdown-menu" role="menu">
+                                    <a role="menuitem" type="edit" class="dropdown-item">Editar</a>
+                                    <a role="menuitem" type="delete" class="dropdown-item">Eliminar</a>
+                                </div>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong>Cultivo:</strong> <field name="crop_id"/>
+                                    </div>
+                                    <div class="col-6">
+                                        <strong>Área:</strong> <field name="area"/> ha
+                                    </div>
+                                </div>
+                                <div class="row mt-2" t-if="record.date_planting.raw_value">
+                                    <div class="col-6">
+                                        <strong>Siembra:</strong> <field name="date_planting"/>
+                                    </div>
+                                    <div class="col-6" t-if="record.date_harvest.raw_value">
+                                        <strong>Cosecha:</strong> <field name="date_harvest"/>
+                                    </div>
+                                </div>
+                                <div class="row mt-2" t-if="record.yield_per_hectare.raw_value > 0">
+                                    <div class="col-12">
+                                        <strong>Rendimiento:</strong> <field name="yield_per_hectare"/> kg/ha
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_bottom_left">
+                                    <span class="badge badge-pill">
+                                        <t t-if="record.is_pasture_or_verdeo.raw_value">
+                                            <span class="badge-info">Pastura/Verdeo</span>
+                                        </t>
+                                        <t t-if="!record.is_pasture_or_verdeo.raw_value">
+                                            <span class="badge-success">Grano</span>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista Gantt para seguimiento temporal de campañas -->
+    <record id="view_mrp_production_agricultural_gantt" model="ir.ui.view">
+        <field name="name">mrp.production.agricultural.gantt</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <gantt string="Cronograma de Campañas"
+                   date_start="date_planting"
+                   date_stop="date_harvest"
+                   default_group_by="field_id"
+                   precision="{'day': 'hour:quarter', 'week': 'day:half', 'month': 'day:half'}"
+                   color="crop_id">
+                <field name="name"/>
+                <field name="field_id"/>
+                <field name="lot_id"/>
+                <field name="crop_id"/>
+                <field name="area"/>
+                <field name="state"/>
+            </gantt>
+        </field>
+    </record>
+
+    <!-- Vista Calendario -->
+    <record id="view_mrp_production_agricultural_calendar" model="ir.ui.view">
+        <field name="name">mrp.production.agricultural.calendar</field>
+        <field name="model">mrp.production</field>
+        <field name="arch" type="xml">
+            <calendar string="Calendario de Campañas"
+                      date_start="date_planting"
+                      date_stop="date_harvest"
+                      color="crop_id"
+                      event_open_popup="true">
+                <field name="name"/>
+                <field name="field_id"/>
+                <field name="lot_id"/>
+                <field name="crop_id"/>
+            </calendar>
+        </field>
+    </record>
+
+</odoo>

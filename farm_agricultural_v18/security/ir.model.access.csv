@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_production_agricultural_user,mrp.production.agricultural.user,mrp.model_mrp_production,base.group_user,1,1,1,1
+access_mrp_bom_agricultural_user,mrp.bom.agricultural.user,mrp.model_mrp_bom,base.group_user,1,1,1,1
+access_mrp_bom_line_agricultural_user,mrp.bom.line.agricultural.user,mrp.model_mrp_bom_line,base.group_user,1,1,1,1
+access_stock_move_agricultural_user,stock.move.agricultural.user,stock.model_stock_move,base.group_user,1,1,1,1
+access_stock_move_line_agricultural_user,stock.move.line.agricultural.user,stock.model_stock_move_line,base.group_user,1,1,1,1
