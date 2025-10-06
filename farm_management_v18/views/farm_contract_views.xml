@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data>
 
     <!-- Vista de Formulario de Contrato -->
     <record id="view_farm_contract_form" model="ir.ui.view">
@@ -237,4 +238,5 @@
         <field name="target">new</field>
     </record>
 
+</data>
 </odoo>

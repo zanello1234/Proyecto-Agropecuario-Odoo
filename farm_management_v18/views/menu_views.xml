@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data>
 
     <!-- Menú Principal -->
     <menuitem id="menu_farm_management_root" 
@@ -44,4 +45,5 @@
               action="base.action_partner_form" 
               sequence="20"/>
 
+</data>
 </odoo>
