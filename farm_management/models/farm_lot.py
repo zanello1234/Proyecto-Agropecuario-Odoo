@@ -8,6 +8,7 @@ import json
 class FarmLot(models.Model):
     _name = 'farm.lot'
     _description = 'Lote de Campo'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'field_id, name'
 
     name = fields.Char(

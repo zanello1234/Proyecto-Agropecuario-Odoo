@@ -9,6 +9,7 @@ from dateutil.relativedelta import relativedelta
 class FarmContract(models.Model):
     _name = 'farm.contract'
     _description = 'Contrato de Alquiler de Campo'
+    _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'start_date desc, name'
 
     name = fields.Char(

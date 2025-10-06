@@ -31,6 +31,7 @@
         'base',
         'base_geolocalize',
         'contacts',
+        'mail',
     ],
     'data': [
         # Security
