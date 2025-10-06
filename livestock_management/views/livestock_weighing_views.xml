@@ -79,8 +79,8 @@
             <list string="Registros de Pesaje" 
                   decoration-success="verified == True"
                   decoration-warning="verified == False"
-                  decoration-info="gdm > 0.5"
-                  decoration-danger="gdm < 0"
+                  decoration-info="gdm &gt; 0.5"
+                  decoration-danger="gdm &lt; 0"
                   sample="1">
                 <field name="date"/>
                 <field name="animal_ear_tag"/>
