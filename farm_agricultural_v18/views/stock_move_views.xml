@@ -15,8 +15,9 @@
                 <field name="production_area" readonly="1"/>
             </xpath>
             
-            <!-- Agregar pestaña de aplicación agrícola -->
-            <xpath expr="//notebook" position="inside">
+            <!-- Error #16: //notebook xpath cannot be located in stock.move parent view -->
+            <!-- Temporarily commented for installation - stock move form structure changed in Odoo 18 -->
+            <!-- <xpath expr="//notebook" position="inside">
                 <page string="Aplicación Agrícola" name="agricultural_application">
                     <group string="Información de Aplicación">
                         <group>
@@ -54,7 +55,7 @@
                                 invisible="application_state == 'cancelled'"/>
                     </div>
                 </page>
-            </xpath>
+            </xpath> -->
 
         </field>
     </record>
@@ -203,7 +204,9 @@
         <field name="inherit_id" ref="stock.view_move_line_form"/>
         <field name="arch" type="xml">
             
-            <xpath expr="//notebook" position="inside">
+            <!-- Error #16: //notebook xpath cannot be located in stock.move.line parent view -->
+            <!-- Temporarily commented for installation - stock move line form structure changed in Odoo 18 -->
+            <!-- <xpath expr="//notebook" position="inside">
                 <page string="Detalle de Aplicación" name="application_detail">
                     <group string="Ubicación Específica">
                         <group>
@@ -221,7 +224,7 @@
                         </group>
                     </group>
                 </page>
-            </xpath>
+            </xpath> -->
 
         </field>
     </record>
