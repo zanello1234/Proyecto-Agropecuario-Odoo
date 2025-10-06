@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario del Animal -->
+    <record id="view_livestock_animal_form" model="ir.ui.view">
+        <field name="name">livestock.animal.form</field>
+        <field name="model">livestock.animal</field>
+        <field name="arch" type="xml">
+            <form string="Animal">
+                <header>
+                    <button name="action_add_weighing" type="object" string="Nuevo Pesaje" 
+                            class="btn-primary" invisible="status != 'active'"/>
+                    <button name="action_add_health_log" type="object" string="Registro Sanitario" 
+                            class="btn-secondary" invisible="status != 'active'"/>
+                    <button name="action_mark_as_sold" type="object" string="Marcar como Vendido" 
+                            class="btn-warning" invisible="status != 'active'" 
+                            confirm="¿Está seguro que desea marcar este animal como vendido?"/>
+                    <button name="action_mark_as_dead" type="object" string="Registrar Mortandad" 
+                            class="btn-danger" invisible="status != 'active'" 
+                            confirm="¿Está seguro que desea registrar la muerte de este animal?"/>
+                    <field name="status" widget="statusbar" statusbar_visible="active,sold,dead"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_children" type="object" 
+                                class="oe_stat_button" icon="fa-baby" 
+                                invisible="children_count == 0 or gender != 'female'">
+                            <field name="children_count" widget="statinfo" string="Crías"/>
+                        </button>
+                        <button name="%(action_livestock_weighing)d" type="action" 
+                                class="oe_stat_button" icon="fa-balance-scale"
+                                context="{'search_default_animal_id': id}">
+                            <field name="total_weighings" widget="statinfo" string="Pesajes"/>
+                        </button>
+                        <button name="%(action_livestock_health_log)d" type="action" 
+                                class="oe_stat_button" icon="fa-medkit"
+                                context="{'search_default_animal_id': id}">
+                            <field name="total_health_logs" widget="statinfo" string="Registros Sanitarios"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="ear_tag_id" placeholder="Número de caravana..." class="oe_inline"/>
+                        </h1>
+                        <h3>
+                            <field name="name" placeholder="Nombre o apodo opcional..." class="oe_inline"/>
+                        </h3>
+                    </div>
+                    
+                    <group>
+                        <group name="basic_info" string="Información Básica">
+                            <field name="breed_id" options="{'no_create': True}"/>
+                            <field name="gender"/>
+                            <field name="birth_date"/>
+                            <field name="age" readonly="1"/>
+                            <field name="mother_id" domain="[('gender', '=', 'female'), ('id', '!=', id)]" 
+                                   options="{'no_create': True}"/>
+                        </group>
+                        <group name="location_info" string="Ubicación y Actividad">
+                            <field name="activity_type"/>
+                            <field name="current_field_id" options="{'no_create': True}"/>
+                            <field name="current_lot_id" options="{'no_create': True}"/>
+                            <field name="current_weight" readonly="1"/>
+                            <field name="last_weighing_date" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <notebook>
+                        <page string="General" name="general">
+                            <group string="Observaciones">
+                                <field name="notes" nolabel="1" placeholder="Observaciones generales sobre el animal..."/>
+                            </group>
+                        </page>
+                        
+                        <page string="Historial de Pesajes" name="weighings">
+                            <field name="weighing_ids">
+                                <list string="Pesajes" editable="bottom">
+                                    <field name="date"/>
+                                    <field name="weight_kg"/>
+                                    <field name="weight_gain" readonly="1"/>
+                                    <field name="gdm" readonly="1"/>
+                                    <field name="days_since_last" readonly="1"/>
+                                    <field name="weighing_reason"/>
+                                    <field name="body_condition"/>
+                                    <field name="verified" readonly="1"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Registro Sanitario" name="health_logs">
+                            <field name="health_log_ids">
+                                <list string="Registros Sanitarios">
+                                    <field name="date"/>
+                                    <field name="log_type"/>
+                                    <field name="product_id"/>
+                                    <field name="dose"/>
+                                    <field name="dose_unit"/>
+                                    <field name="veterinarian"/>
+                                    <field name="state"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Eventos de Vida" name="events">
+                            <field name="event_ids">
+                                <list string="Eventos">
+                                    <field name="event_type"/>
+                                    <field name="date"/>
+                                    <field name="cause_of_death" invisible="event_type != 'death'"/>
+                                    <field name="notes"/>
+                                </list>
+                            </field>
+                        </page>
+                        
+                        <page string="Genealogía" name="genealogy" invisible="gender != 'female' or children_count == 0">
+                            <field name="children_ids">
+                                <list string="Crías">
+                                    <field name="ear_tag_id"/>
+                                    <field name="name"/>
+                                    <field name="gender"/>
+                                    <field name="birth_date"/>
+                                    <field name="age"/>
+                                    <field name="status"/>
+                                    <field name="current_weight"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Animales -->
+    <record id="view_livestock_animal_list" model="ir.ui.view">
+        <field name="name">livestock.animal.list</field>
+        <field name="model">livestock.animal</field>
+        <field name="arch" type="xml">
+            <list string="Animales" 
+                  decoration-success="status == 'active'"
+                  decoration-warning="status == 'sold'"
+                  decoration-danger="status == 'dead'"
+                  decoration-muted="status == 'dead'"
+                  sample="1">
+                <field name="ear_tag_id"/>
+                <field name="name"/>
+                <field name="breed_id"/>
+                <field name="gender"/>
+                <field name="age"/>
+                <field name="activity_type"/>
+                <field name="current_lot_id"/>
+                <field name="current_field_id"/>
+                <field name="current_weight"/>
+                <field name="last_weighing_date"/>
+                <field name="status"/>
+                <field name="total_weighings"/>
+                <field name="total_health_logs"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Kanban de Animales -->
+    <record id="view_livestock_animal_kanban" model="ir.ui.view">
+        <field name="name">livestock.animal.kanban</field>
+        <field name="model">livestock.animal</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="status" class="o_res_partner_kanban">
+                <field name="ear_tag_id"/>
+                <field name="name"/>
+                <field name="breed_id"/>
+                <field name="gender"/>
+                <field name="age"/>
+                <field name="activity_type"/>
+                <field name="current_weight"/>
+                <field name="status"/>
+                <field name="last_weighing_date"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_image">
+                                <i class="fa fa-3x" t-att-class="record.gender.raw_value == 'male' ? 'fa-mars text-primary' : 'fa-venus text-info'"/>
+                            </div>
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title">
+                                    <field name="ear_tag_id"/>
+                                    <t t-if="record.name.value"> - <field name="name"/></t>
+                                </strong>
+                                <div class="o_kanban_record_subtitle">
+                                    <field name="breed_id"/> • <field name="age"/>
+                                </div>
+                                <div class="o_kanban_record_subtitle">
+                                    <i class="fa fa-industry"/> <field name="activity_type"/>
+                                </div>
+                                <div class="o_kanban_record_subtitle" t-if="record.current_weight.value">
+                                    <i class="fa fa-balance-scale"/> <field name="current_weight"/>kg
+                                    <t t-if="record.last_weighing_date.value">
+                                        (<field name="last_weighing_date"/>)
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda de Animales -->
+    <record id="view_livestock_animal_search" model="ir.ui.view">
+        <field name="name">livestock.animal.search</field>
+        <field name="model">livestock.animal</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Animales">
+                <field name="ear_tag_id" string="Caravana" filter_domain="[('ear_tag_id', 'ilike', self)]"/>
+                <field name="name" string="Nombre" filter_domain="[('name', 'ilike', self)]"/>
+                <field name="breed_id" string="Raza"/>
+                <field name="current_lot_id" string="Lote"/>
+                <field name="current_field_id" string="Campo"/>
+                
+                <separator/>
+                <filter string="Activos" name="active_animals" domain="[('status', '=', 'active')]" help="Animales activos"/>
+                <filter string="Vendidos" name="sold_animals" domain="[('status', '=', 'sold')]"/>
+                <filter string="Muertos" name="dead_animals" domain="[('status', '=', 'dead')]"/>
+                
+                <separator/>
+                <filter string="Machos" name="males" domain="[('gender', '=', 'male')]"/>
+                <filter string="Hembras" name="females" domain="[('gender', '=', 'female')]"/>
+                
+                <separator/>
+                <filter string="Cría" name="breeding" domain="[('activity_type', '=', 'breeding')]"/>
+                <filter string="Invernada" name="fattening" domain="[('activity_type', '=', 'fattening')]"/>
+                <filter string="Feedlot" name="feedlot" domain="[('activity_type', '=', 'feedlot')]"/>
+                
+                <separator/>
+                <filter string="Sin Pesajes" name="no_weighings" domain="[('total_weighings', '=', 0)]"/>
+                <filter string="Pesados Recientemente" name="recent_weighings" 
+                        domain="[('last_weighing_date', '>=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Estado" name="group_by_status" context="{'group_by': 'status'}"/>
+                    <filter string="Género" name="group_by_gender" context="{'group_by': 'gender'}"/>
+                    <filter string="Raza" name="group_by_breed" context="{'group_by': 'breed_id'}"/>
+                    <filter string="Actividad" name="group_by_activity" context="{'group_by': 'activity_type'}"/>
+                    <filter string="Lote Actual" name="group_by_lot" context="{'group_by': 'current_lot_id'}"/>
+                    <filter string="Campo Actual" name="group_by_field" context="{'group_by': 'current_field_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana Principal -->
+    <record id="action_livestock_animal" model="ir.actions.act_window">
+        <field name="name">Animales</field>
+        <field name="res_model">livestock.animal</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_active_animals': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Agregue su primer animal!
+            </p>
+            <p>
+                Registre sus animales individualmente con su número de caravana único.
+                Podrá hacer seguimiento del peso, sanidad y toda la trazabilidad.
+            </p>
+        </field>
+    </record>
+
+</odoo>

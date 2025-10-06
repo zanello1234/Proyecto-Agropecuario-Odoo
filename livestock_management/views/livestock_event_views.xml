@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Evento -->
+    <record id="view_livestock_event_form" model="ir.ui.view">
+        <field name="name">livestock.event.form</field>
+        <field name="model">livestock.event</field>
+        <field name="arch" type="xml">
+            <form string="Evento de Vida">
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="display_name" readonly="1"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="event_info" string="Información del Evento">
+                            <field name="event_type"/>
+                            <field name="date"/>
+                            <field name="animal_id" options="{'no_create': True}"/>
+                        </group>
+                        <group name="animal_info" string="Información del Animal">
+                            <field name="animal_ear_tag" readonly="1"/>
+                            <field name="animal_breed" readonly="1"/>
+                            <field name="animal_gender" readonly="1"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Causa de la Muerte" invisible="event_type != 'death'">
+                        <field name="cause_of_death" nolabel="1" placeholder="Especifique la causa de la muerte..."/>
+                    </group>
+                    
+                    <group string="Notas Adicionales">
+                        <field name="notes" nolabel="1" placeholder="Observaciones adicionales sobre el evento..."/>
+                    </group>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Eventos -->
+    <record id="view_livestock_event_list" model="ir.ui.view">
+        <field name="name">livestock.event.list</field>
+        <field name="model">livestock.event</field>
+        <field name="arch" type="xml">
+            <list string="Eventos de Vida" 
+                  decoration-success="event_type == 'birth'"
+                  decoration-danger="event_type == 'death'"
+                  sample="1">
+                <field name="date"/>
+                <field name="event_type"/>
+                <field name="animal_ear_tag"/>
+                <field name="animal_breed"/>
+                <field name="animal_gender"/>
+                <field name="cause_of_death" invisible="event_type != 'death'"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Kanban de Eventos -->
+    <record id="view_livestock_event_kanban" model="ir.ui.view">
+        <field name="name">livestock.event.kanban</field>
+        <field name="model">livestock.event</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="event_type" class="o_res_partner_kanban">
+                <field name="event_type"/>
+                <field name="date"/>
+                <field name="animal_ear_tag"/>
+                <field name="animal_breed"/>
+                <field name="animal_gender"/>
+                <field name="cause_of_death"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="animal_ear_tag"/>
+                                        </strong>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <field name="date"/>
+                                        </small>
+                                    </div>
+                                    <div class="o_kanban_record_headings">
+                                        <span t-if="record.event_type.raw_value == 'birth'" class="badge badge-success">
+                                            <i class="fa fa-baby"/> Nacimiento
+                                        </span>
+                                        <span t-if="record.event_type.raw_value == 'death'" class="badge badge-danger">
+                                            <i class="fa fa-times"/> Mortandad
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div>
+                                        <strong><field name="animal_breed"/></strong>
+                                        <span t-if="record.animal_gender.raw_value == 'male'" class="text-primary">♂</span>
+                                        <span t-if="record.animal_gender.raw_value == 'female'" class="text-info">♀</span>
+                                    </div>
+                                    <div t-if="record.cause_of_death.value and record.event_type.raw_value == 'death'">
+                                        <small class="text-muted">Causa: <field name="cause_of_death"/></small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda de Eventos -->
+    <record id="view_livestock_event_search" model="ir.ui.view">
+        <field name="name">livestock.event.search</field>
+        <field name="model">livestock.event</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Eventos">
+                <field name="animal_ear_tag" string="Caravana"/>
+                <field name="animal_breed" string="Raza"/>
+                <field name="cause_of_death" string="Causa de Muerte"/>
+                
+                <separator/>
+                <filter string="Nacimientos" name="births" domain="[('event_type', '=', 'birth')]"/>
+                <filter string="Mortandades" name="deaths" domain="[('event_type', '=', 'death')]"/>
+                
+                <separator/>
+                <filter string="Este Mes" name="this_month" 
+                        domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Este Año" name="this_year" 
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-01-01'))]"/>
+                
+                <separator/>
+                <filter string="Machos" name="males" domain="[('animal_gender', '=', 'male')]"/>
+                <filter string="Hembras" name="females" domain="[('animal_gender', '=', 'female')]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Tipo de Evento" name="group_by_type" context="{'group_by': 'event_type'}"/>
+                    <filter string="Fecha" name="group_by_date" context="{'group_by': 'date'}"/>
+                    <filter string="Raza" name="group_by_breed" context="{'group_by': 'animal_breed'}"/>
+                    <filter string="Género" name="group_by_gender" context="{'group_by': 'animal_gender'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana para Eventos -->
+    <record id="action_livestock_event" model="ir.actions.act_window">
+        <field name="name">Eventos de Vida</field>
+        <field name="res_model">livestock.event</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡No hay eventos registrados!
+            </p>
+            <p>
+                Los eventos de nacimiento se crean automáticamente al registrar un animal.
+                Los eventos de mortandad se registran manualmente cuando ocurren.
+            </p>
+        </field>
+    </record>
+
+    <!-- Acción específica para Nacimientos -->
+    <record id="action_livestock_birth_events" model="ir.actions.act_window">
+        <field name="name">Nacimientos</field>
+        <field name="res_model">livestock.event</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('event_type', '=', 'birth')]</field>
+        <field name="context">{'default_event_type': 'birth', 'search_default_this_year': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡No hay nacimientos registrados!
+            </p>
+            <p>
+                Los nacimientos se registran automáticamente cuando crea un nuevo animal.
+                También puede crear eventos de nacimiento manualmente.
+            </p>
+        </field>
+    </record>
+
+    <!-- Acción específica para Mortandades -->
+    <record id="action_livestock_death_events" model="ir.actions.act_window">
+        <field name="name">Mortandades</field>
+        <field name="res_model">livestock.event</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="domain">[('event_type', '=', 'death')]</field>
+        <field name="context">{'default_event_type': 'death', 'search_default_this_year': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡No hay mortandades registradas!
+            </p>
+            <p>
+                Registre las mortandades utilizando el botón "Registrar Mortandad" 
+                desde la ficha del animal o créelas directamente aquí.
+            </p>
+        </field>
+    </record>
+
+</odoo>

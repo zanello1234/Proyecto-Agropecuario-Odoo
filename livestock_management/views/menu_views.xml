@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menú Principal de Ganadería -->
+    <menuitem id="menu_livestock_root" 
+              name="Ganadería" 
+              sequence="50" 
+              web_icon="livestock_management,static/description/icon.png"/>
+
+    <!-- Menú de Animales -->
+    <menuitem id="menu_livestock_animals" 
+              name="Animales" 
+              parent="menu_livestock_root" 
+              sequence="10"/>
+
+    <menuitem id="menu_livestock_animal_list" 
+              name="Animales" 
+              parent="menu_livestock_animals" 
+              action="action_livestock_animal" 
+              sequence="10"/>
+
+    <menuitem id="menu_livestock_breed_list" 
+              name="Razas" 
+              parent="menu_livestock_animals" 
+              action="action_livestock_breed" 
+              sequence="20"/>
+
+    <!-- Menú de Eventos -->
+    <menuitem id="menu_livestock_events" 
+              name="Eventos" 
+              parent="menu_livestock_root" 
+              sequence="20"/>
+
+    <menuitem id="menu_livestock_birth_events" 
+              name="Nacimientos" 
+              parent="menu_livestock_events" 
+              action="action_livestock_birth_events" 
+              sequence="10"/>
+
+    <menuitem id="menu_livestock_death_events" 
+              name="Mortandades" 
+              parent="menu_livestock_events" 
+              action="action_livestock_death_events" 
+              sequence="20"/>
+
+    <menuitem id="menu_livestock_all_events" 
+              name="Todos los Eventos" 
+              parent="menu_livestock_events" 
+              action="action_livestock_event" 
+              sequence="30"/>
+
+    <!-- Menú de Sanidad -->
+    <menuitem id="menu_livestock_health" 
+              name="Sanidad" 
+              parent="menu_livestock_root" 
+              sequence="30"/>
+
+    <menuitem id="menu_livestock_health_log_list" 
+              name="Registros Sanitarios" 
+              parent="menu_livestock_health" 
+              action="action_livestock_health_log" 
+              sequence="10"/>
+
+    <!-- Menú de Pesajes -->
+    <menuitem id="menu_livestock_weighing" 
+              name="Pesajes" 
+              parent="menu_livestock_root" 
+              sequence="40"/>
+
+    <menuitem id="menu_livestock_weighing_list" 
+              name="Registros de Pesaje" 
+              parent="menu_livestock_weighing" 
+              action="action_livestock_weighing" 
+              sequence="10"/>
+
+    <!-- Menú de Informes (para futuras expansiones) -->
+    <menuitem id="menu_livestock_reports" 
+              name="Informes" 
+              parent="menu_livestock_root" 
+              sequence="50"/>
+
+    <!-- Submenús de Informes (placeholders para futuras funcionalidades) -->
+    <menuitem id="menu_livestock_mortality_report" 
+              name="Informe de Mortandad" 
+              parent="menu_livestock_reports" 
+              sequence="10"/>
+
+    <menuitem id="menu_livestock_weight_gain_report" 
+              name="Informe de Ganancia de Peso" 
+              parent="menu_livestock_reports" 
+              sequence="20"/>
+
+    <menuitem id="menu_livestock_health_report" 
+              name="Informe Sanitario" 
+              parent="menu_livestock_reports" 
+              sequence="30"/>
+
+</odoo>

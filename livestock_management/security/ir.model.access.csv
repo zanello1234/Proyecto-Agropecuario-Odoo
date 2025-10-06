@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_livestock_animal,livestock.animal,model_livestock_animal,base.group_user,1,1,1,1
+access_livestock_breed,livestock.breed,model_livestock_breed,base.group_user,1,1,1,1
+access_livestock_event,livestock.event,model_livestock_event,base.group_user,1,1,1,1
+access_livestock_health_log,livestock.health.log,model_livestock_health_log,base.group_user,1,1,1,1
+access_livestock_weighing,livestock.weighing,model_livestock_weighing,base.group_user,1,1,1,1

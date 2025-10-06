@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Registro Sanitario -->
+    <record id="view_livestock_health_log_form" model="ir.ui.view">
+        <field name="name">livestock.health.log.form</field>
+        <field name="model">livestock.health.log</field>
+        <field name="arch" type="xml">
+            <form string="Registro Sanitario">
+                <header>
+                    <button name="action_mark_applied" type="object" string="Marcar como Aplicado" 
+                            class="btn-primary" invisible="state != 'planned'"/>
+                    <button name="action_mark_completed" type="object" string="Marcar como Completado" 
+                            class="btn-success" invisible="state != 'applied'"/>
+                    <button name="action_create_next_application" type="object" string="Crear Próxima Aplicación" 
+                            class="btn-secondary" invisible="not next_application_date or state != 'completed'"/>
+                    <field name="state" widget="statusbar" statusbar_visible="planned,applied,completed"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_animal" type="object" 
+                                class="oe_stat_button" icon="fa-user" 
+                                invisible="not animal_id">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Ver Animal</span>
+                            </div>
+                        </button>
+                        <button name="action_view_lot_animals" type="object" 
+                                class="oe_stat_button" icon="fa-users" 
+                                invisible="not lot_id">
+                            <field name="animal_count" widget="statinfo" string="Animales del Lote"/>
+                        </button>
+                    </div>
+                    
+                    <group>
+                        <group name="target_info" string="Objetivo del Tratamiento">
+                            <field name="animal_id" invisible="lot_id" options="{'no_create': True}"/>
+                            <field name="lot_id" invisible="animal_id" options="{'no_create': True}"/>
+                            <field name="animal_ear_tag" readonly="1" invisible="not animal_id"/>
+                            <field name="animal_count" readonly="1" invisible="not lot_id"/>
+                        </group>
+                        <group name="treatment_info" string="Información del Tratamiento">
+                            <field name="log_type"/>
+                            <field name="date"/>
+                            <field name="veterinarian"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group name="product_info" string="Producto y Dosis">
+                            <field name="product_id" domain="[('type', '=', 'product')]" options="{'no_create': True}"/>
+                            <field name="dose"/>
+                            <field name="dose_unit"/>
+                        </group>
+                        <group name="cost_info" string="Costos">
+                            <field name="cost_per_animal" readonly="1"/>
+                            <field name="total_cost" readonly="1"/>
+                            <field name="next_application_date"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Observaciones">
+                        <field name="notes" nolabel="1" placeholder="Observaciones adicionales sobre el tratamiento..."/>
+                    </group>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Registro Sanitario -->
+    <record id="view_livestock_health_log_list" model="ir.ui.view">
+        <field name="name">livestock.health.log.list</field>
+        <field name="model">livestock.health.log</field>
+        <field name="arch" type="xml">
+            <list string="Registros Sanitarios" 
+                  decoration-info="state == 'planned'"
+                  decoration-warning="state == 'applied'"
+                  decoration-success="state == 'completed'"
+                  sample="1">
+                <field name="date"/>
+                <field name="log_type"/>
+                <field name="animal_ear_tag"/>
+                <field name="lot_id"/>
+                <field name="animal_count"/>
+                <field name="product_id"/>
+                <field name="dose"/>
+                <field name="dose_unit"/>
+                <field name="veterinarian"/>
+                <field name="total_cost" sum="Total"/>
+                <field name="state"/>
+                <field name="next_application_date"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Kanban de Registro Sanitario -->
+    <record id="view_livestock_health_log_kanban" model="ir.ui.view">
+        <field name="name">livestock.health.log.kanban</field>
+        <field name="model">livestock.health.log</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="log_type" class="o_res_partner_kanban">
+                <field name="log_type"/>
+                <field name="date"/>
+                <field name="animal_ear_tag"/>
+                <field name="lot_id"/>
+                <field name="animal_count"/>
+                <field name="product_id"/>
+                <field name="state"/>
+                <field name="veterinarian"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <t t-if="record.animal_ear_tag.value">
+                                                <field name="animal_ear_tag"/>
+                                            </t>
+                                            <t t-if="record.lot_id.value">
+                                                Lote: <field name="lot_id"/>
+                                            </t>
+                                        </strong>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <field name="date"/>
+                                        </small>
+                                    </div>
+                                    <div class="o_kanban_record_headings">
+                                        <span t-if="record.state.raw_value == 'planned'" class="badge badge-info">Planificado</span>
+                                        <span t-if="record.state.raw_value == 'applied'" class="badge badge-warning">Aplicado</span>
+                                        <span t-if="record.state.raw_value == 'completed'" class="badge badge-success">Completado</span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div t-if="record.product_id.value">
+                                        <strong>Producto:</strong> <field name="product_id"/>
+                                    </div>
+                                    <div t-if="record.veterinarian.value">
+                                        <strong>Veterinario:</strong> <field name="veterinarian"/>
+                                    </div>
+                                    <div t-if="record.animal_count.value > 1">
+                                        <small class="text-muted">
+                                            <i class="fa fa-users"/> <field name="animal_count"/> animales
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda de Registro Sanitario -->
+    <record id="view_livestock_health_log_search" model="ir.ui.view">
+        <field name="name">livestock.health.log.search</field>
+        <field name="model">livestock.health.log</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Registros Sanitarios">
+                <field name="animal_ear_tag" string="Caravana"/>
+                <field name="lot_id" string="Lote"/>
+                <field name="product_id" string="Producto"/>
+                <field name="veterinarian" string="Veterinario"/>
+                
+                <separator/>
+                <filter string="Planificados" name="planned" domain="[('state', '=', 'planned')]"/>
+                <filter string="Aplicados" name="applied" domain="[('state', '=', 'applied')]"/>
+                <filter string="Completados" name="completed" domain="[('state', '=', 'completed')]"/>
+                
+                <separator/>
+                <filter string="Vacunaciones" name="vaccinations" domain="[('log_type', '=', 'vaccination')]"/>
+                <filter string="Desparasitaciones" name="dewormings" domain="[('log_type', '=', 'deworming')]"/>
+                <filter string="Tratamientos" name="treatments" domain="[('log_type', '=', 'treatment')]"/>
+                <filter string="Vitaminas" name="vitamins" domain="[('log_type', '=', 'vitamin')]"/>
+                <filter string="Antibióticos" name="antibiotics" domain="[('log_type', '=', 'antibiotic')]"/>
+                
+                <separator/>
+                <filter string="Individual" name="individual" domain="[('animal_id', '!=', False)]"/>
+                <filter string="Por Lote" name="by_lot" domain="[('lot_id', '!=', False)]"/>
+                
+                <separator/>
+                <filter string="Este Mes" name="this_month" 
+                        domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Este Año" name="this_year" 
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-01-01'))]"/>
+                
+                <separator/>
+                <filter string="Con Próxima Aplicación" name="with_next_application" 
+                        domain="[('next_application_date', '!=', False)]"/>
+                <filter string="Próximas Aplicaciones Vencidas" name="overdue_applications" 
+                        domain="[('next_application_date', '&lt;', context_today().strftime('%Y-%m-%d'))]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Tipo de Control" name="group_by_type" context="{'group_by': 'log_type'}"/>
+                    <filter string="Estado" name="group_by_state" context="{'group_by': 'state'}"/>
+                    <filter string="Producto" name="group_by_product" context="{'group_by': 'product_id'}"/>
+                    <filter string="Veterinario" name="group_by_vet" context="{'group_by': 'veterinarian'}"/>
+                    <filter string="Fecha" name="group_by_date" context="{'group_by': 'date'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana para Registro Sanitario -->
+    <record id="action_livestock_health_log" model="ir.actions.act_window">
+        <field name="name">Registros Sanitarios</field>
+        <field name="res_model">livestock.health.log</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Registre el primer control sanitario!
+            </p>
+            <p>
+                Puede registrar tratamientos individuales para un animal específico
+                o tratamientos masivos para un lote completo.
+            </p>
+        </field>
+    </record>
+
+</odoo>

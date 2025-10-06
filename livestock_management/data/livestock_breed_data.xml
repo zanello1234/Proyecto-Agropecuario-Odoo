@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        
+        <!-- Razas de Carne Principales en Argentina -->
+        <record id="breed_aberdeen_angus" model="livestock.breed">
+            <field name="name">Aberdeen Angus</field>
+            <field name="code">AA</field>
+            <field name="breed_type">beef</field>
+            <field name="origin_country">Escocia</field>
+            <field name="average_weight_male">900</field>
+            <field name="average_weight_female">650</field>
+            <field name="description">Raza sin cuernos, de gran adaptación y excelente calidad de carne. Muy popular en Argentina.</field>
+        </record>
+        
+        <record id="breed_hereford" model="livestock.breed">
+            <field name="name">Hereford</field>
+            <field name="code">HH</field>
+            <field name="breed_type">beef</field>
+            <field name="origin_country">Inglaterra</field>
+            <field name="average_weight_male">1000</field>
+            <field name="average_weight_female">700</field>
+            <field name="description">Raza rústica de cara blanca, adaptada a diversas condiciones climáticas.</field>
+        </record>
+        
+        <record id="breed_shorthorn" model="livestock.breed">
+            <field name="name">Shorthorn</field>
+            <field name="code">SH</field>
+            <field name="breed_type">dual</field>
+            <field name="origin_country">Inglaterra</field>
+            <field name="average_weight_male">950</field>
+            <field name="average_weight_female">650</field>
+            <field name="description">Raza de doble propósito, tanto para carne como para leche.</field>
+        </record>
+        
+        <record id="breed_brahman" model="livestock.breed">
+            <field name="name">Brahman</field>
+            <field name="code">BR</field>
+            <field name="breed_type">beef</field>
+            <field name="origin_country">India</field>
+            <field name="average_weight_male">1100</field>
+            <field name="average_weight_female">750</field>
+            <field name="description">Raza cebuina resistente al calor y a los parásitos, ideal para zonas subtropicales.</field>
+        </record>
+        
+        <record id="breed_brangus" model="livestock.breed">
+            <field name="name">Brangus</field>
+            <field name="code">BG</field>
+            <field name="breed_type">beef</field>
+            <field name="origin_country">Estados Unidos</field>
+            <field name="average_weight_male">950</field>
+            <field name="average_weight_female">650</field>
+            <field name="description">Cruza entre Brahman y Angus, combinando rusticidad y calidad de carne.</field>
+        </record>
+        
+        <record id="breed_limousin" model="livestock.breed">
+            <field name="name">Limousin</field>
+            <field name="code">LM</field>
+            <field name="breed_type">beef</field>
+            <field name="origin_country">Francia</field>
+            <field name="average_weight_male">1100</field>
+            <field name="average_weight_female">750</field>
+            <field name="description">Raza de gran desarrollo muscular y excelente rendimiento carnicero.</field>
+        </record>
+        
+        <record id="breed_charolais" model="livestock.breed">
+            <field name="name">Charolais</field>
+            <field name="code">CH</field>
+            <field name="breed_type">beef</field>
+            <field name="origin_country">Francia</field>
+            <field name="average_weight_male">1200</field>
+            <field name="average_weight_female">800</field>
+            <field name="description">Raza de gran tamaño y excelente ganancia de peso.</field>
+        </record>
+        
+        <record id="breed_simmental" model="livestock.breed">
+            <field name="name">Simmental</field>
+            <field name="code">SM</field>
+            <field name="breed_type">dual</field>
+            <field name="origin_country">Suiza</field>
+            <field name="average_weight_male">1100</field>
+            <field name="average_weight_female">750</field>
+            <field name="description">Raza de doble propósito de gran tamaño y buena producción lechera.</field>
+        </record>
+        
+        <!-- Razas Criollas -->
+        <record id="breed_criollo" model="livestock.breed">
+            <field name="name">Criollo Argentino</field>
+            <field name="code">CR</field>
+            <field name="breed_type">beef</field>
+            <field name="origin_country">Argentina</field>
+            <field name="average_weight_male">650</field>
+            <field name="average_weight_female">450</field>
+            <field name="description">Raza nativa argentina, muy rústica y adaptada a condiciones adversas.</field>
+        </record>
+        
+        <!-- Razas Lecheras -->
+        <record id="breed_holstein" model="livestock.breed">
+            <field name="name">Holstein</field>
+            <field name="code">HO</field>
+            <field name="breed_type">dairy</field>
+            <field name="origin_country">Holanda</field>
+            <field name="average_weight_male">900</field>
+            <field name="average_weight_female">650</field>
+            <field name="description">Principal raza lechera mundial, de alta producción.</field>
+        </record>
+        
+        <record id="breed_jersey" model="livestock.breed">
+            <field name="name">Jersey</field>
+            <field name="code">JE</field>
+            <field name="breed_type">dairy</field>
+            <field name="origin_country">Reino Unido</field>
+            <field name="average_weight_male">700</field>
+            <field name="average_weight_female">450</field>
+            <field name="description">Raza lechera de menor tamaño pero leche de alta calidad y contenido graso.</field>
+        </record>
+        
+    </data>
+</odoo>

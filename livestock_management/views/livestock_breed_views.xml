@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Raza -->
+    <record id="view_livestock_breed_form" model="ir.ui.view">
+        <field name="name">livestock.breed.form</field>
+        <field name="model">livestock.breed</field>
+        <field name="arch" type="xml">
+            <form string="Raza">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(action_livestock_animal)d" type="action" 
+                                class="oe_stat_button" icon="fa-users"
+                                context="{'search_default_breed_id': id}">
+                            <field name="animal_count" widget="statinfo" string="Animales"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre de la raza..."/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="basic_info" string="Información Básica">
+                            <field name="code"/>
+                            <field name="breed_type"/>
+                            <field name="origin_country"/>
+                            <field name="active"/>
+                        </group>
+                        <group name="weight_info" string="Pesos Promedio">
+                            <field name="average_weight_male"/>
+                            <field name="average_weight_female"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Descripción">
+                        <field name="description" nolabel="1" placeholder="Características generales de la raza..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Razas -->
+    <record id="view_livestock_breed_list" model="ir.ui.view">
+        <field name="name">livestock.breed.list</field>
+        <field name="model">livestock.breed</field>
+        <field name="arch" type="xml">
+            <list string="Razas" sample="1">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="breed_type"/>
+                <field name="origin_country"/>
+                <field name="average_weight_male"/>
+                <field name="average_weight_female"/>
+                <field name="animal_count"/>
+                <field name="active"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Kanban de Razas -->
+    <record id="view_livestock_breed_kanban" model="ir.ui.view">
+        <field name="name">livestock.breed.kanban</field>
+        <field name="model">livestock.breed</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban">
+                <field name="name"/>
+                <field name="code"/>
+                <field name="breed_type"/>
+                <field name="origin_country"/>
+                <field name="animal_count"/>
+                <field name="average_weight_male"/>
+                <field name="average_weight_female"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="name"/>
+                                            <t t-if="record.code.value"> [<field name="code"/>]</t>
+                                        </strong>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <field name="origin_country"/>
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small>Tipo:</small><br/>
+                                            <span t-if="record.breed_type.raw_value == 'beef'" class="badge badge-primary">Carne</span>
+                                            <span t-if="record.breed_type.raw_value == 'dairy'" class="badge badge-info">Lechera</span>
+                                            <span t-if="record.breed_type.raw_value == 'dual'" class="badge badge-success">Doble Propósito</span>
+                                        </div>
+                                        <div class="col-6">
+                                            <small>Animales:</small><br/>
+                                            <strong><field name="animal_count"/></strong>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2" t-if="record.average_weight_male.value or record.average_weight_female.value">
+                                        <div class="col-12">
+                                            <small>Peso promedio:</small><br/>
+                                            <t t-if="record.average_weight_male.value">
+                                                ♂ <field name="average_weight_male"/>kg
+                                            </t>
+                                            <t t-if="record.average_weight_female.value">
+                                                ♀ <field name="average_weight_female"/>kg
+                                            </t>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda de Razas -->
+    <record id="view_livestock_breed_search" model="ir.ui.view">
+        <field name="name">livestock.breed.search</field>
+        <field name="model">livestock.breed</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Razas">
+                <field name="name" string="Nombre"/>
+                <field name="code" string="Código"/>
+                <field name="origin_country" string="País"/>
+                
+                <separator/>
+                <filter string="Activas" name="active_breeds" domain="[('active', '=', True)]"/>
+                <filter string="Inactivas" name="inactive_breeds" domain="[('active', '=', False)]"/>
+                
+                <separator/>
+                <filter string="Carne" name="beef_breeds" domain="[('breed_type', '=', 'beef')]"/>
+                <filter string="Lecheras" name="dairy_breeds" domain="[('breed_type', '=', 'dairy')]"/>
+                <filter string="Doble Propósito" name="dual_breeds" domain="[('breed_type', '=', 'dual')]"/>
+                
+                <separator/>
+                <filter string="Con Animales" name="with_animals" domain="[('animal_count', '>', 0)]"/>
+                <filter string="Sin Animales" name="without_animals" domain="[('animal_count', '=', 0)]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Tipo de Raza" name="group_by_type" context="{'group_by': 'breed_type'}"/>
+                    <filter string="País de Origen" name="group_by_country" context="{'group_by': 'origin_country'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana para Razas -->
+    <record id="action_livestock_breed" model="ir.actions.act_window">
+        <field name="name">Razas</field>
+        <field name="res_model">livestock.breed</field>
+        <field name="view_mode">kanban,list,form</field>
+        <field name="context">{'search_default_active_breeds': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Configure las razas de su ganado!
+            </p>
+            <p>
+                Defina las diferentes razas que maneja en su establecimiento.
+                Esto le permitirá clasificar sus animales y hacer análisis por raza.
+            </p>
+        </field>
+    </record>
+
+</odoo>

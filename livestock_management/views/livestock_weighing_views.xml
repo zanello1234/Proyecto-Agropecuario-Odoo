@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista de Formulario de Pesaje -->
+    <record id="view_livestock_weighing_form" model="ir.ui.view">
+        <field name="name">livestock.weighing.form</field>
+        <field name="model">livestock.weighing</field>
+        <field name="arch" type="xml">
+            <form string="Registro de Pesaje">
+                <header>
+                    <button name="action_verify_weighing" type="object" string="Verificar Pesaje" 
+                            class="btn-primary" invisible="verified"/>
+                    <field name="verified" widget="boolean_toggle"/>
+                </header>
+                
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_animal" type="object" 
+                                class="oe_stat_button" icon="fa-user">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Ver Animal</span>
+                            </div>
+                        </button>
+                        <button name="action_view_weight_evolution" type="object" 
+                                class="oe_stat_button" icon="fa-line-chart">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_text">Evolución de Peso</span>
+                            </div>
+                        </button>
+                    </div>
+                    
+                    <group>
+                        <group name="animal_info" string="Información del Animal">
+                            <field name="animal_id" options="{'no_create': True}"/>
+                            <field name="animal_ear_tag" readonly="1"/>
+                            <field name="animal_breed" readonly="1"/>
+                            <field name="animal_age" readonly="1"/>
+                        </group>
+                        <group name="weighing_info" string="Información del Pesaje">
+                            <field name="date"/>
+                            <field name="weight_kg"/>
+                            <field name="weighing_reason"/>
+                            <field name="body_condition"/>
+                        </group>
+                    </group>
+                    
+                    <group>
+                        <group name="calculation_info" string="Cálculos Automáticos">
+                            <field name="weight_gain" readonly="1"/>
+                            <field name="days_since_last" readonly="1"/>
+                            <field name="gdm" readonly="1"/>
+                        </group>
+                        <group name="verification_info" string="Verificación">
+                            <field name="verified" readonly="1"/>
+                            <field name="verified_by" readonly="1" invisible="not verified"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Observaciones">
+                        <field name="notes" nolabel="1" placeholder="Observaciones sobre el pesaje o estado del animal..."/>
+                    </group>
+                </sheet>
+                
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista de Lista de Pesajes -->
+    <record id="view_livestock_weighing_list" model="ir.ui.view">
+        <field name="name">livestock.weighing.list</field>
+        <field name="model">livestock.weighing</field>
+        <field name="arch" type="xml">
+            <list string="Registros de Pesaje" 
+                  decoration-success="verified == True"
+                  decoration-warning="verified == False"
+                  decoration-info="gdm > 0.5"
+                  decoration-danger="gdm < 0"
+                  sample="1">
+                <field name="date"/>
+                <field name="animal_ear_tag"/>
+                <field name="animal_breed"/>
+                <field name="animal_age"/>
+                <field name="weight_kg"/>
+                <field name="weight_gain"/>
+                <field name="gdm"/>
+                <field name="days_since_last"/>
+                <field name="weighing_reason"/>
+                <field name="body_condition"/>
+                <field name="verified"/>
+                <field name="notes"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Vista Kanban de Pesajes -->
+    <record id="view_livestock_weighing_kanban" model="ir.ui.view">
+        <field name="name">livestock.weighing.kanban</field>
+        <field name="model">livestock.weighing</field>
+        <field name="arch" type="xml">
+            <kanban class="o_res_partner_kanban">
+                <field name="animal_ear_tag"/>
+                <field name="animal_breed"/>
+                <field name="date"/>
+                <field name="weight_kg"/>
+                <field name="gdm"/>
+                <field name="weight_gain"/>
+                <field name="verified"/>
+                <field name="weighing_reason"/>
+                
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_card oe_kanban_global_click">
+                            <div class="oe_kanban_content">
+                                <div class="o_kanban_record_top">
+                                    <div class="o_kanban_record_headings">
+                                        <strong class="o_kanban_record_title">
+                                            <field name="animal_ear_tag"/>
+                                        </strong>
+                                        <small class="o_kanban_record_subtitle text-muted">
+                                            <field name="date"/>
+                                        </small>
+                                    </div>
+                                    <div class="o_kanban_record_headings">
+                                        <span t-if="record.verified.raw_value" class="badge badge-success">
+                                            <i class="fa fa-check"/> Verificado
+                                        </span>
+                                        <span t-if="!record.verified.raw_value" class="badge badge-warning">
+                                            <i class="fa fa-exclamation"/> Sin Verificar
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="o_kanban_record_body">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <small>Peso:</small><br/>
+                                            <strong><field name="weight_kg"/>kg</strong>
+                                        </div>
+                                        <div class="col-6" t-if="record.gdm.value != 0">
+                                            <small>GDM:</small><br/>
+                                            <strong t-if="record.gdm.value > 0" class="text-success">
+                                                +<field name="gdm"/>kg/día
+                                            </strong>
+                                            <strong t-if="record.gdm.value &lt; 0" class="text-danger">
+                                                <field name="gdm"/>kg/día
+                                            </strong>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2" t-if="record.weight_gain.value != 0">
+                                        <div class="col-12">
+                                            <small>Ganancia:</small>
+                                            <span t-if="record.weight_gain.value > 0" class="text-success">
+                                                +<field name="weight_gain"/>kg
+                                            </span>
+                                            <span t-if="record.weight_gain.value &lt; 0" class="text-danger">
+                                                <field name="weight_gain"/>kg
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-2">
+                                        <div class="col-12">
+                                            <small class="text-muted"><field name="animal_breed"/></small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- Vista de Gráfico de Pesajes -->
+    <record id="view_livestock_weighing_graph" model="ir.ui.view">
+        <field name="name">livestock.weighing.graph</field>
+        <field name="model">livestock.weighing</field>
+        <field name="arch" type="xml">
+            <graph string="Evolución de Peso" type="line">
+                <field name="date" type="row"/>
+                <field name="weight_kg" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <!-- Vista Pivote de Pesajes -->
+    <record id="view_livestock_weighing_pivot" model="ir.ui.view">
+        <field name="name">livestock.weighing.pivot</field>
+        <field name="model">livestock.weighing</field>
+        <field name="arch" type="xml">
+            <pivot string="Análisis de Pesajes">
+                <field name="animal_breed" type="row"/>
+                <field name="date" interval="month" type="col"/>
+                <field name="weight_kg" type="measure"/>
+                <field name="gdm" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <!-- Vista de Búsqueda de Pesajes -->
+    <record id="view_livestock_weighing_search" model="ir.ui.view">
+        <field name="name">livestock.weighing.search</field>
+        <field name="model">livestock.weighing</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Pesajes">
+                <field name="animal_ear_tag" string="Caravana"/>
+                <field name="animal_breed" string="Raza"/>
+                <field name="verified_by" string="Verificado Por"/>
+                
+                <separator/>
+                <filter string="Verificados" name="verified" domain="[('verified', '=', True)]"/>
+                <filter string="Sin Verificar" name="not_verified" domain="[('verified', '=', False)]"/>
+                
+                <separator/>
+                <filter string="Con Ganancia Positiva" name="positive_gdm" domain="[('gdm', '>', 0)]"/>
+                <filter string="Con Pérdida de Peso" name="negative_gdm" domain="[('gdm', '&lt;', 0)]"/>
+                <filter string="Sin GDM Calculado" name="no_gdm" domain="[('gdm', '=', 0)]"/>
+                
+                <separator/>
+                <filter string="Control Rutinario" name="routine" domain="[('weighing_reason', '=', 'routine')]"/>
+                <filter string="Ingreso" name="entry" domain="[('weighing_reason', '=', 'entry')]"/>
+                <filter string="Salida/Venta" name="exit" domain="[('weighing_reason', '=', 'exit')]"/>
+                
+                <separator/>
+                <filter string="Este Mes" name="this_month" 
+                        domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
+                <filter string="Este Año" name="this_year" 
+                        domain="[('date', '&gt;=', context_today().strftime('%Y-01-01'))]"/>
+                
+                <group expand="0" string="Agrupar Por">
+                    <filter string="Animal" name="group_by_animal" context="{'group_by': 'animal_id'}"/>
+                    <filter string="Raza" name="group_by_breed" context="{'group_by': 'animal_breed'}"/>
+                    <filter string="Motivo" name="group_by_reason" context="{'group_by': 'weighing_reason'}"/>
+                    <filter string="Condición Corporal" name="group_by_condition" context="{'group_by': 'body_condition'}"/>
+                    <filter string="Fecha" name="group_by_date" context="{'group_by': 'date'}"/>
+                    <filter string="Verificado" name="group_by_verified" context="{'group_by': 'verified'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción de Ventana para Pesajes -->
+    <record id="action_livestock_weighing" model="ir.actions.act_window">
+        <field name="name">Registros de Pesaje</field>
+        <field name="res_model">livestock.weighing</field>
+        <field name="view_mode">list,kanban,form,graph,pivot</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                ¡Registre el primer pesaje!
+            </p>
+            <p>
+                Los pesajes son fundamentales para el control de la ganancia de peso
+                y la evaluación del rendimiento de sus animales.
+            </p>
+        </field>
+    </record>
+
+</odoo>
