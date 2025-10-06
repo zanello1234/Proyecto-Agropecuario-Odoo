@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Configuración de Campaña Fina -->
+    <record id="sisa_campaign_config_fine" model="sisa.campaign.config">
+        <field name="name">Cultivos de Campaña Fina</field>
+        <field name="campaign_type">fine</field>
+        <field name="sequence">10</field>
+        <field name="description">Cultivos de invierno que se siembran entre mayo y agosto</field>
+        <field name="planting_start_month">5</field>
+        <field name="planting_start_day">1</field>
+        <field name="planting_end_month">8</field>
+        <field name="planting_end_day">31</field>
+        <field name="crosses_years" eval="False"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- Configuración de Campaña Gruesa -->
+    <record id="sisa_campaign_config_coarse" model="sisa.campaign.config">
+        <field name="name">Cultivos de Campaña Gruesa</field>
+        <field name="campaign_type">coarse</field>
+        <field name="sequence">20</field>
+        <field name="description">Cultivos de verano que se siembran entre septiembre y febrero</field>
+        <field name="planting_start_month">9</field>
+        <field name="planting_start_day">1</field>
+        <field name="planting_end_month">2</field>
+        <field name="planting_end_day">28</field>
+        <field name="crosses_years" eval="True"/>
+        <field name="active" eval="True"/>
+    </record>
+
+    <!-- Configuración de Granos para Stock -->
+    <record id="sisa_campaign_config_grains" model="sisa.campaign.config">
+        <field name="name">Granos para Control de Stock</field>
+        <field name="campaign_type">grain</field>
+        <field name="sequence">30</field>
+        <field name="description">Todos los granos que deben ser considerados para el control de existencias</field>
+        <field name="active" eval="True"/>
+    </record>
+
+</odoo>

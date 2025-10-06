@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista Form del Asistente IP1 -->
+    <record id="view_sisa_ip1_wizard_form" model="ir.ui.view">
+        <field name="name">sisa.ip1.wizard.form</field>
+        <field name="model">sisa.ip1.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generar Declaración IP1 - Campaña Fina">
+                <header>
+                    <button name="action_calculate_stock" type="object" 
+                            string="Calcular Stock" class="btn-primary"
+                            invisible="state != 'init'"/>
+                    <button name="action_calculate_surface" type="object" 
+                            string="Calcular Superficie" class="btn-primary"
+                            invisible="state != 'stock_preview'"/>
+                    <button name="action_back_to_stock" type="object" 
+                            string="← Volver a Stock" class="btn-secondary"
+                            invisible="state != 'surface_preview'"/>
+                    <button name="action_confirm_creation" type="object" 
+                            string="Crear Declaración" class="btn-success"
+                            invisible="state != 'surface_preview'"
+                            confirm="¿Confirma la creación de la declaración IP1 con los datos mostrados?"/>
+                    <button name="action_view_declaration" type="object" 
+                            string="Ver Declaración" class="btn-primary"
+                            invisible="state != 'confirm'"/>
+                    <button special="cancel" string="Cerrar" class="btn-secondary"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Generar Declaración IP1 - Campaña Fina</h1>
+                        <h2 invisible="state == 'init'">
+                            Año <field name="year" readonly="1" class="oe_inline"/>
+                        </h2>
+                    </div>
+
+                    <!-- Paso 1: Configuración inicial -->
+                    <group invisible="state != 'init'">
+                        <group string="Configuración de la Declaración">
+                            <field name="year" required="1"/>
+                            <field name="stock_cutoff_date" required="1"/>
+                        </group>
+                        <group string="Información">
+                            <div class="alert alert-info">
+                                <p><strong>IP1 - Información Productiva 1 (Campaña Fina)</strong></p>
+                                <p>Este asistente lo guiará para generar automáticamente la declaración IP1 
+                                   basándose en los datos de sus módulos de gestión agropecuaria.</p>
+                                <p><strong>Incluye:</strong></p>
+                                <ul>
+                                    <li>Existencias de granos de producción propia</li>
+                                    <li>Superficie sembrada con cultivos de campaña fina</li>
+                                </ul>
+                            </div>
+                        </group>
+                    </group>
+
+                    <!-- Paso 2: Vista previa de stock -->
+                    <group invisible="state != 'stock_preview'" string="Vista Previa - Existencias de Granos">
+                        <group>
+                            <field name="total_stock_kg" readonly="1"/>
+                            <label for="stock_cutoff_date" string="Fecha de Corte"/>
+                            <div>
+                                <field name="stock_cutoff_date" readonly="1" class="oe_inline"/>
+                            </div>
+                        </group>
+                        <group>
+                            <div class="alert alert-warning">
+                                <p><strong>Revise las existencias calculadas</strong></p>
+                                <p>El sistema encontró las siguientes existencias de granos en sus depósitos. 
+                                   Puede ajustar las cantidades si es necesario antes de continuar.</p>
+                            </div>
+                        </group>
+                    </group>
+
+                    <field name="preview_stock_line_ids" invisible="state != 'stock_preview'">
+                        <tree editable="bottom">
+                            <field name="product_id" readonly="1"/>
+                            <field name="location_id" readonly="1"/>
+                            <field name="quantity_kg" sum="Total Kg"/>
+                        </tree>
+                    </field>
+
+                    <!-- Paso 3: Vista previa de superficie -->
+                    <group invisible="state != 'surface_preview'" string="Vista Previa - Superficie Sembrada">
+                        <group>
+                            <field name="total_surface_ha" readonly="1"/>
+                            <field name="year" readonly="1"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-warning">
+                                <p><strong>Revise la superficie calculada</strong></p>
+                                <p>El sistema encontró las siguientes siembras de campaña fina para el período 
+                                   Mayo-Agosto del año seleccionado. Puede ajustar las superficies si es necesario.</p>
+                            </div>
+                        </group>
+                    </group>
+
+                    <field name="preview_surface_line_ids" invisible="state != 'surface_preview'">
+                        <tree editable="bottom">
+                            <field name="field_id" readonly="1"/>
+                            <field name="lot_id" readonly="1"/>
+                            <field name="crop_id" readonly="1"/>
+                            <field name="area" sum="Total ha"/>
+                            <field name="real_estate_id" readonly="1"/>
+                            <field name="planting_date" readonly="1"/>
+                        </tree>
+                    </field>
+
+                    <!-- Paso 4: Confirmación -->
+                    <group invisible="state != 'confirm'" string="Declaración Creada Exitosamente">
+                        <group>
+                            <field name="declaration_id" readonly="1"/>
+                            <field name="total_stock_kg" readonly="1"/>
+                            <field name="total_surface_ha" readonly="1"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-success">
+                                <p><strong>¡Declaración IP1 creada exitosamente!</strong></p>
+                                <p>La declaración ha sido generada y está lista para ser exportada para AFIP.</p>
+                                <p>Puede acceder a ella desde el menú "Declaraciones SISA" o hacer clic en 
+                                   "Ver Declaración" para abrirla directamente.</p>
+                            </div>
+                        </group>
+                    </group>
+
+                    <!-- Información de resumen en todos los estados excepto inicial -->
+                    <group invisible="state == 'init'" string="Resumen">
+                        <group>
+                            <label for="total_stock_kg" string="Total Stock"/>
+                            <div>
+                                <field name="total_stock_kg" readonly="1" class="oe_inline"/>
+                                <span class="text-muted"> kg</span>
+                            </div>
+                            <label for="total_surface_ha" string="Total Superficie"/>
+                            <div>
+                                <field name="total_surface_ha" readonly="1" class="oe_inline"/>
+                                <span class="text-muted"> hectáreas</span>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

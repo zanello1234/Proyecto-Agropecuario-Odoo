@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista Tree de Configuración de Campañas -->
+    <record id="view_sisa_campaign_config_tree" model="ir.ui.view">
+        <field name="name">sisa.campaign.config.tree</field>
+        <field name="model">sisa.campaign.config</field>
+        <field name="arch" type="xml">
+            <tree string="Configuración de Campañas SISA" editable="bottom">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+                <field name="campaign_type"/>
+                <field name="product_ids" widget="many2many_tags" 
+                       options="{'color_field': 'color', 'no_create': True}"/>
+                <field name="planting_start_month" optional="hide"/>
+                <field name="planting_start_day" optional="hide"/>
+                <field name="planting_end_month" optional="hide"/>
+                <field name="planting_end_day" optional="hide"/>
+                <field name="crosses_years" optional="hide"/>
+                <field name="active"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Vista Form de Configuración de Campañas -->
+    <record id="view_sisa_campaign_config_form" model="ir.ui.view">
+        <field name="name">sisa.campaign.config.form</field>
+        <field name="model">sisa.campaign.config</field>
+        <field name="arch" type="xml">
+            <form string="Configuración de Campaña SISA">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button type="object" name="action_view_products" 
+                                class="oe_stat_button" icon="fa-cube">
+                            <field name="product_ids" widget="statinfo" string="Productos"/>
+                        </button>
+                    </div>
+                    
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Nombre de la configuración"/>
+                        </h1>
+                    </div>
+                    
+                    <group>
+                        <group name="basic_info">
+                            <field name="campaign_type" required="1"/>
+                            <field name="sequence"/>
+                            <field name="active"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group name="period_info" string="Período de Siembra">
+                            <label for="planting_start_month" string="Inicio"/>
+                            <div class="o_row">
+                                <field name="planting_start_day" placeholder="Día"/>
+                                <span>/</span>
+                                <field name="planting_start_month" placeholder="Mes"/>
+                            </div>
+                            <label for="planting_end_month" string="Fin"/>
+                            <div class="o_row">
+                                <field name="planting_end_day" placeholder="Día"/>
+                                <span>/</span>
+                                <field name="planting_end_month" placeholder="Mes"/>
+                            </div>
+                            <field name="crosses_years"/>
+                        </group>
+                    </group>
+                    
+                    <group string="Descripción">
+                        <field name="description" placeholder="Descripción detallada de la configuración..." nolabel="1"/>
+                    </group>
+                    
+                    <group string="Productos Asociados">
+                        <field name="product_ids" nolabel="1" 
+                               context="{'default_type': 'product'}"
+                               domain="[('type', '=', 'product')]">
+                            <tree>
+                                <field name="default_code"/>
+                                <field name="name"/>
+                                <field name="categ_id"/>
+                                <field name="uom_id"/>
+                            </tree>
+                        </field>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Vista Search de Configuración de Campañas -->
+    <record id="view_sisa_campaign_config_search" model="ir.ui.view">
+        <field name="name">sisa.campaign.config.search</field>
+        <field name="model">sisa.campaign.config</field>
+        <field name="arch" type="xml">
+            <search string="Buscar Configuración de Campañas">
+                <field name="name"/>
+                <field name="campaign_type"/>
+                <field name="product_ids"/>
+                
+                <filter string="Activo" name="active" domain="[('active', '=', True)]"/>
+                <filter string="Inactivo" name="inactive" domain="[('active', '=', False)]"/>
+                
+                <separator/>
+                <filter string="Campaña Fina" name="fine" domain="[('campaign_type', '=', 'fine')]"/>
+                <filter string="Campaña Gruesa" name="coarse" domain="[('campaign_type', '=', 'coarse')]"/>
+                <filter string="Granos (Stock)" name="grain" domain="[('campaign_type', '=', 'grain')]"/>
+                
+                <group expand="0" string="Agrupar por">
+                    <filter string="Tipo de Campaña" name="group_type" 
+                            context="{'group_by': 'campaign_type'}"/>
+                    <filter string="Compañía" name="group_company" 
+                            context="{'group_by': 'company_id'}" 
+                            groups="base.group_multi_company"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Acción para Configuración de Campañas -->
+    <record id="action_sisa_campaign_config" model="ir.actions.act_window">
+        <field name="name">Configuración de Campañas</field>
+        <field name="res_model">sisa.campaign.config</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{'search_default_active': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Configure los productos por tipo de campaña
+            </p>
+            <p>
+                Defina qué productos corresponden a cada tipo de campaña (Fina, Gruesa, Granos)
+                para que el sistema pueda generar automáticamente las declaraciones SISA.
+            </p>
+            <p>
+                <strong>Campaña Fina:</strong> Trigo, Cebada, Avena, etc.<br/>
+                <strong>Campaña Gruesa:</strong> Soja, Maíz, Girasol, etc.<br/>
+                <strong>Granos (Stock):</strong> Todos los granos para control de existencias.
+            </p>
+        </field>
+    </record>
+
+</odoo>

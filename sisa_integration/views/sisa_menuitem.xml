@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menú principal SISA -->
+    <menuitem id="menu_sisa_main" 
+              name="SISA - AFIP" 
+              sequence="15"
+              web_icon="sisa_integration,static/description/icon.png"/>
+
+    <!-- Submenú Declaraciones -->
+    <menuitem id="menu_sisa_declarations" 
+              name="Declaraciones" 
+              parent="menu_sisa_main" 
+              sequence="10"/>
+
+    <!-- Menú Declaraciones SISA -->
+    <menuitem id="menu_sisa_declaration_list" 
+              name="Declaraciones SISA" 
+              parent="menu_sisa_declarations" 
+              action="action_sisa_declaration" 
+              sequence="10"/>
+
+    <!-- Separador -->
+    <menuitem id="menu_sisa_separator1" 
+              parent="menu_sisa_declarations" 
+              sequence="15"/>
+
+    <!-- Menú Asistente IP1 -->
+    <menuitem id="menu_sisa_ip1_wizard" 
+              name="Nuevo IP1 (Campaña Fina)" 
+              parent="menu_sisa_declarations" 
+              action="action_sisa_ip1_wizard" 
+              sequence="20"/>
+
+    <!-- Menú Asistente IP2 -->
+    <menuitem id="menu_sisa_ip2_wizard" 
+              name="Nuevo IP2 (Campaña Gruesa)" 
+              parent="menu_sisa_declarations" 
+              action="action_sisa_ip2_wizard" 
+              sequence="30"/>
+
+    <!-- Submenú Configuración -->
+    <menuitem id="menu_sisa_config" 
+              name="Configuración" 
+              parent="menu_sisa_main" 
+              sequence="90"/>
+
+    <!-- Menú Configuración de Campañas -->
+    <menuitem id="menu_sisa_campaign_config" 
+              name="Configuración de Campañas" 
+              parent="menu_sisa_config" 
+              action="action_sisa_campaign_config" 
+              sequence="10"/>
+
+    <!-- Acciones para Asistentes -->
+    <record id="action_sisa_ip1_wizard" model="ir.actions.act_window">
+        <field name="name">Generar Declaración IP1 (Campaña Fina)</field>
+        <field name="res_model">sisa.ip1.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+    <record id="action_sisa_ip2_wizard" model="ir.actions.act_window">
+        <field name="name">Generar Declaración IP2 (Campaña Gruesa)</field>
+        <field name="res_model">sisa.ip2.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="context">{}</field>
+    </record>
+
+</odoo>

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista Form del Asistente IP2 -->
+    <record id="view_sisa_ip2_wizard_form" model="ir.ui.view">
+        <field name="name">sisa.ip2.wizard.form</field>
+        <field name="model">sisa.ip2.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Generar Declaración IP2 - Campaña Gruesa">
+                <header>
+                    <button name="action_calculate_surface" type="object" 
+                            string="Calcular Superficie" class="btn-primary"
+                            invisible="state != 'init'"/>
+                    <button name="action_back_to_init" type="object" 
+                            string="← Volver" class="btn-secondary"
+                            invisible="state != 'surface_preview'"/>
+                    <button name="action_confirm_creation" type="object" 
+                            string="Crear Declaración" class="btn-success"
+                            invisible="state != 'surface_preview'"
+                            confirm="¿Confirma la creación de la declaración IP2 con los datos mostrados?"/>
+                    <button name="action_view_declaration" type="object" 
+                            string="Ver Declaración" class="btn-primary"
+                            invisible="state != 'confirm'"/>
+                    <button name="action_view_production" type="object" 
+                            string="Ver Órdenes de Cultivo" class="btn-info"
+                            invisible="state not in ('surface_preview', 'confirm')"/>
+                    <button special="cancel" string="Cerrar" class="btn-secondary"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Generar Declaración IP2 - Campaña Gruesa</h1>
+                        <h2 invisible="state == 'init'">
+                            Campaña <field name="year" readonly="1" class="oe_inline"/>/<span t-esc="year + 1"/>
+                        </h2>
+                    </div>
+
+                    <!-- Paso 1: Configuración inicial -->
+                    <group invisible="state != 'init'">
+                        <group string="Configuración de la Declaración">
+                            <field name="year" required="1"/>
+                        </group>
+                        <group string="Información del Período">
+                            <field name="period_info" nolabel="1"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-info">
+                                <p><strong>IP2 - Información Productiva 2 (Campaña Gruesa)</strong></p>
+                                <p>Este asistente generará automáticamente la declaración IP2 basándose en 
+                                   las siembras de campaña gruesa registradas en el período correspondiente.</p>
+                                <p><strong>Incluye:</strong></p>
+                                <ul>
+                                    <li>Superficie sembrada con cultivos de campaña gruesa</li>
+                                    <li>Detalle por campo, lote y cultivo</li>
+                                    <li>Fechas de siembra</li>
+                                </ul>
+                            </div>
+                        </group>
+                    </group>
+
+                    <!-- Paso 2: Vista previa de superficie -->
+                    <group invisible="state != 'surface_preview'" string="Vista Previa - Superficie Sembrada">
+                        <group>
+                            <field name="total_surface_ha" readonly="1"/>
+                            <field name="total_lots" readonly="1"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-warning">
+                                <p><strong>Revise la superficie calculada</strong></p>
+                                <p>El sistema encontró las siguientes siembras de campaña gruesa para el período 
+                                   seleccionado. Puede ajustar las superficies si es necesario antes de crear la declaración.</p>
+                            </div>
+                        </group>
+                    </group>
+
+                    <field name="preview_surface_line_ids" invisible="state != 'surface_preview'">
+                        <tree editable="bottom">
+                            <field name="field_name" readonly="1" string="Campo"/>
+                            <field name="lot_name" readonly="1" string="Lote"/>
+                            <field name="crop_name" readonly="1" string="Cultivo"/>
+                            <field name="area" sum="Total ha"/>
+                            <field name="real_estate_id" readonly="1"/>
+                            <field name="planting_date" readonly="1"/>
+                        </tree>
+                    </field>
+
+                    <!-- Paso 3: Confirmación -->
+                    <group invisible="state != 'confirm'" string="Declaración Creada Exitosamente">
+                        <group>
+                            <field name="declaration_id" readonly="1"/>
+                            <field name="total_surface_ha" readonly="1"/>
+                            <field name="total_lots" readonly="1"/>
+                        </group>
+                        <group>
+                            <div class="alert alert-success">
+                                <p><strong>¡Declaración IP2 creada exitosamente!</strong></p>
+                                <p>La declaración ha sido generada y está lista para ser exportada para AFIP.</p>
+                                <p>Puede acceder a ella desde el menú "Declaraciones SISA" o hacer clic en 
+                                   "Ver Declaración" para abrirla directamente.</p>
+                            </div>
+                        </group>
+                    </group>
+
+                    <!-- Información de resumen en estados de preview y confirmación -->
+                    <group invisible="state == 'init'" string="Resumen de la Campaña">
+                        <group>
+                            <label for="total_surface_ha" string="Total Superficie"/>
+                            <div>
+                                <field name="total_surface_ha" readonly="1" class="oe_inline"/>
+                                <span class="text-muted"> hectáreas</span>
+                            </div>
+                            <label for="total_lots" string="Total Lotes"/>
+                            <div>
+                                <field name="total_lots" readonly="1" class="oe_inline"/>
+                                <span class="text-muted"> lotes sembrados</span>
+                            </div>
+                        </group>
+                        <group invisible="state == 'surface_preview'">
+                            <div class="alert alert-info">
+                                <p><strong>Próximos pasos:</strong></p>
+                                <ul>
+                                    <li>Exporte la declaración en formato AFIP</li>
+                                    <li>Presente la declaración en el sistema SISA</li>
+                                    <li>Marque la declaración como "Presentada" en Odoo</li>
+                                </ul>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>

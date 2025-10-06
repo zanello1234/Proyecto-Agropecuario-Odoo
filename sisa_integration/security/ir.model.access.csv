@@ -1,0 +1,13 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_sisa_declaration_user,SISA Declaration User,model_sisa_declaration,base.group_user,1,1,1,0
+access_sisa_declaration_manager,SISA Declaration Manager,model_sisa_declaration,base.group_system,1,1,1,1
+access_sisa_declaration_stock_line_user,SISA Declaration Stock Line User,model_sisa_declaration_stock_line,base.group_user,1,1,1,1
+access_sisa_declaration_surface_line_user,SISA Declaration Surface Line User,model_sisa_declaration_surface_line,base.group_user,1,1,1,1
+access_sisa_campaign_config_user,SISA Campaign Config User,model_sisa_campaign_config,base.group_user,1,0,0,0
+access_sisa_campaign_config_manager,SISA Campaign Config Manager,model_sisa_campaign_config,base.group_system,1,1,1,1
+access_sisa_ip1_wizard_user,SISA IP1 Wizard User,model_sisa_ip1_wizard,base.group_user,1,1,1,1
+access_sisa_ip1_wizard_stock_line_user,SISA IP1 Wizard Stock Line User,model_sisa_ip1_wizard_stock_line,base.group_user,1,1,1,1
+access_sisa_ip1_wizard_surface_line_user,SISA IP1 Wizard Surface Line User,model_sisa_ip1_wizard_surface_line,base.group_user,1,1,1,1
+access_sisa_ip2_wizard_user,SISA IP2 Wizard User,model_sisa_ip2_wizard,base.group_user,1,1,1,1
+access_sisa_ip2_wizard_surface_line_user,SISA IP2 Wizard Surface Line User,model_sisa_ip2_wizard_surface_line,base.group_user,1,1,1,1
+access_sisa_export_wizard_user,SISA Export Wizard User,model_sisa_export_wizard,base.group_user,1,1,1,1

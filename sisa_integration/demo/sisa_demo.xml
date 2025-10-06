@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Productos demo para campaña fina -->
+    <record id="product_wheat_demo" model="product.product">
+        <field name="name">Trigo Demo</field>
+        <field name="default_code">TRIGO001</field>
+        <field name="type">product</field>
+        <field name="categ_id" ref="product.product_category_all"/>
+    </record>
+
+    <record id="product_barley_demo" model="product.product">
+        <field name="name">Cebada Demo</field>
+        <field name="default_code">CEBADA001</field>
+        <field name="type">product</field>
+        <field name="categ_id" ref="product.product_category_all"/>
+    </record>
+
+    <!-- Productos demo para campaña gruesa -->
+    <record id="product_soy_demo" model="product.product">
+        <field name="name">Soja Demo</field>
+        <field name="default_code">SOJA001</field>
+        <field name="type">product</field>
+        <field name="categ_id" ref="product.product_category_all"/>
+    </record>
+
+    <record id="product_corn_demo" model="product.product">
+        <field name="name">Maíz Demo</field>
+        <field name="default_code">MAIZ001</field>
+        <field name="type">product</field>
+        <field name="categ_id" ref="product.product_category_all"/>
+    </record>
+
+    <!-- Asignar productos a configuraciones demo -->
+    <record id="sisa_campaign_config_fine_demo" model="sisa.campaign.config">
+        <field name="name">Demo - Cultivos de Campaña Fina</field>
+        <field name="campaign_type">fine</field>
+        <field name="sequence">110</field>
+        <field name="description">Configuración demo para cultivos de campaña fina</field>
+        <field name="planting_start_month">5</field>
+        <field name="planting_start_day">1</field>
+        <field name="planting_end_month">8</field>
+        <field name="planting_end_day">31</field>
+        <field name="crosses_years" eval="False"/>
+        <field name="active" eval="False"/>
+        <field name="product_ids" eval="[(6, 0, [ref('product_wheat_demo'), ref('product_barley_demo')])]"/>
+    </record>
+
+    <record id="sisa_campaign_config_coarse_demo" model="sisa.campaign.config">
+        <field name="name">Demo - Cultivos de Campaña Gruesa</field>
+        <field name="campaign_type">coarse</field>
+        <field name="sequence">120</field>
+        <field name="description">Configuración demo para cultivos de campaña gruesa</field>
+        <field name="planting_start_month">9</field>
+        <field name="planting_start_day">1</field>
+        <field name="planting_end_month">2</field>
+        <field name="planting_end_day">28</field>
+        <field name="crosses_years" eval="True"/>
+        <field name="active" eval="False"/>
+        <field name="product_ids" eval="[(6, 0, [ref('product_soy_demo'), ref('product_corn_demo')])]"/>
+    </record>
+
+    <record id="sisa_campaign_config_grains_demo" model="sisa.campaign.config">
+        <field name="name">Demo - Granos para Stock</field>
+        <field name="campaign_type">grain</field>
+        <field name="sequence">130</field>
+        <field name="description">Configuración demo para control de stock de granos</field>
+        <field name="active" eval="False"/>
+        <field name="product_ids" eval="[(6, 0, [ref('product_wheat_demo'), ref('product_barley_demo'), ref('product_soy_demo'), ref('product_corn_demo')])]"/>
+    </record>
+
+    <!-- Declaración demo IP1 -->
+    <record id="sisa_declaration_ip1_demo" model="sisa.declaration">
+        <field name="declaration_type">ip1</field>
+        <field name="year">2024</field>
+        <field name="stock_cutoff_date">2024-09-30</field>
+        <field name="state">draft</field>
+        <field name="notes">Declaración demo para campaña fina 2024</field>
+    </record>
+
+    <!-- Declaración demo IP2 -->
+    <record id="sisa_declaration_ip2_demo" model="sisa.declaration">
+        <field name="declaration_type">ip2</field>
+        <field name="year">2024</field>
+        <field name="state">draft</field>
+        <field name="notes">Declaración demo para campaña gruesa 2024/2025</field>
+    </record>
+
+</odoo>

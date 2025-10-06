@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Vista Form del Asistente de Exportación -->
+    <record id="view_sisa_export_wizard_form" model="ir.ui.view">
+        <field name="name">sisa.export.wizard.form</field>
+        <field name="model">sisa.export.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Exportar Declaración SISA para AFIP">
+                <header>
+                    <button name="action_generate_file" type="object" 
+                            string="Generar Archivo" class="btn-primary"
+                            invisible="state != 'init'"/>
+                    <button name="action_download_file" type="object" 
+                            string="Descargar Archivo" class="btn-success"
+                            invisible="state != 'done'"/>
+                    <button special="cancel" string="Cerrar" class="btn-secondary"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <h1>Exportar para AFIP</h1>
+                        <h2 invisible="not declaration_id">
+                            <field name="declaration_id" readonly="1" class="oe_inline"/>
+                        </h2>
+                    </div>
+
+                    <!-- Información de la declaración -->
+                    <group string="Información de la Declaración" invisible="state != 'init'">
+                        <field name="declaration_info" nolabel="1"/>
+                    </group>
+
+                    <!-- Configuración de exportación -->
+                    <group invisible="state != 'init'" string="Configuración de Exportación">
+                        <group>
+                            <field name="export_format" required="1"/>
+                            <field name="separator" invisible="export_format not in ('csv', 'txt')"/>
+                            <field name="encoding"/>
+                            <field name="include_header"/>
+                        </group>
+                        <group>
+                            <field name="export_stock" 
+                                   invisible="not declaration_id or declaration_id.declaration_type != 'ip1'"/>
+                            <field name="export_surface"/>
+                        </group>
+                    </group>
+
+                    <!-- Resultado de la exportación -->
+                    <group invisible="state != 'done'" string="Archivo Generado">
+                        <group>
+                            <field name="file_name" readonly="1"/>
+                            <label for="file_data" string="Archivo"/>
+                            <div>
+                                <field name="file_data" filename="file_name" readonly="1"/>
+                            </div>
+                        </group>
+                        <group>
+                            <div class="alert alert-success">
+                                <p><strong>¡Archivo generado exitosamente!</strong></p>
+                                <p>El archivo de exportación ha sido creado y está listo para ser descargado.</p>
+                                <p><strong>Próximos pasos:</strong></p>
+                                <ol>
+                                    <li>Descargue el archivo haciendo clic en "Descargar Archivo"</li>
+                                    <li>Ingrese al sistema SISA de AFIP</li>
+                                    <li>Importe el archivo en la declaración correspondiente</li>
+                                    <li>Complete la presentación en AFIP</li>
+                                    <li>Marque la declaración como "Presentada" en Odoo</li>
+                                </ol>
+                            </div>
+                        </group>
+                    </group>
+
+                    <!-- Ayuda sobre formatos -->
+                    <group invisible="state != 'init'" string="Información sobre Formatos">
+                        <div class="alert alert-info">
+                            <p><strong>Formatos de exportación disponibles:</strong></p>
+                            <ul>
+                                <li><strong>CSV:</strong> Formato estándar separado por comas, compatible con Excel y la mayoría de sistemas</li>
+                                <li><strong>TXT:</strong> Formato de texto plano, ideal para sistemas legacy</li>
+                                <li><strong>Excel (XLSX):</strong> Formato de Excel con múltiples hojas, más fácil de revisar</li>
+                            </ul>
+                            <p><strong>Recomendación:</strong> Use CSV con separador "punto y coma" para compatibilidad con Excel argentino.</p>
+                        </div>
+                    </group>
+
+                    <!-- Campos ocultos para mantener estado -->
+                    <field name="state" invisible="1"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+</odoo>
