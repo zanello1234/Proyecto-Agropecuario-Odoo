@@ -125,10 +125,12 @@
                         domain="[('crop_type', '=', 'verdeo')]"/>
             </xpath>
             
-            <xpath expr="//group[@string='Group By']" position="inside">
+            <!-- Error #14: Odoo 18 prohibits xpath selectors with @string attribute -->
+            <!-- Temporarily commented for installation - will restore with alternative approach -->
+            <!-- <xpath expr="//group[@string='Group By']" position="inside">
                 <filter string="Tipo de Cultivo" name="group_by_crop_type" 
                         context="{'group_by': 'crop_type'}"/>
-            </xpath>
+            </xpath> -->
 
         </field>
     </record>
