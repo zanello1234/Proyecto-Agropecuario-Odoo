@@ -45,8 +45,8 @@
         # Security
         'security/ir.model.access.csv',
         
-        # Data
-        'data/mrp_data.xml',
+        # Data - Comentado temporalmente por problemas de tipo de producto
+        # 'data/mrp_data.xml',
         
         # Views
         'views/mrp_production_views.xml',
