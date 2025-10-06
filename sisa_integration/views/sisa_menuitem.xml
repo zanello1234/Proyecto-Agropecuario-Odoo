@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data>
 
     <!-- Menú principal SISA -->
     <menuitem id="menu_sisa_main" 
@@ -68,4 +69,5 @@
         <field name="context">{}</field>
     </record>
 
+</data>
 </odoo>
