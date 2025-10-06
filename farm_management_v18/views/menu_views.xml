@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Menú Principal -->
+    <menuitem id="menu_farm_management_root" 
+              name="Gestión de Campos" 
+              sequence="10"/>
+
+    <!-- Submenús -->
+    <menuitem id="menu_farm_fields" 
+              name="Campos" 
+              parent="menu_farm_management_root"
+              action="action_farm_field" 
+              sequence="10"/>
+
+    <menuitem id="menu_farm_lots" 
+              name="Lotes" 
+              parent="menu_farm_management_root"
+              action="action_farm_lot" 
+              sequence="20"/>
+
+    <menuitem id="menu_farm_contracts" 
+              name="Contratos de Alquiler" 
+              parent="menu_farm_management_root"
+              action="action_farm_contract" 
+              sequence="30"/>
+
+    <!-- Submenú de Configuración -->
+    <menuitem id="menu_farm_config" 
+              name="Configuración" 
+              parent="menu_farm_management_root"
+              sequence="100"/>
+
+    <!-- Accesos rápidos en el menú de configuración -->
+    <menuitem id="menu_farm_config_provinces" 
+              name="Provincias" 
+              parent="menu_farm_config"
+              action="base.action_country_state" 
+              sequence="10"/>
+
+    <menuitem id="menu_farm_config_partners" 
+              name="Contactos/Propietarios" 
+              parent="menu_farm_config"
+              action="base.action_partner_form" 
+              sequence="20"/>
+
+</odoo>
