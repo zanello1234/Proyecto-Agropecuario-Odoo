@@ -46,12 +46,12 @@
                                 type="object" 
                                 string="Marcar Completada" 
                                 class="btn-primary"
-                                attrs="{'invisible': [('application_state', '=', 'completed')]}"/>
+                                invisible="application_state == 'completed'"/>
                         <button name="action_mark_application_cancelled" 
                                 type="object" 
                                 string="Cancelar Aplicación" 
                                 class="btn-secondary"
-                                attrs="{'invisible': [('application_state', '=', 'cancelled')]}"/>
+                                invisible="application_state == 'cancelled'"/>
                     </div>
                 </page>
             </xpath>

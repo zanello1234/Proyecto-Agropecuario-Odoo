@@ -11,14 +11,14 @@
             <!-- Agregar campos específicos agrícolas -->
             <xpath expr="//field[@name='product_tmpl_id']" position="after">
                 <field name="is_agricultural_plan"/>
-                <field name="crop_type" attrs="{'invisible': [('is_agricultural_plan', '=', False)]}"/>
+                <field name="crop_type" invisible="not is_agricultural_plan"/>
             </xpath>
             
             <xpath expr="//field[@name='product_qty']" position="after">
                 <field name="recommended_area_min" 
-                       attrs="{'invisible': [('is_agricultural_plan', '=', False)]}"/>
-                <field name="recommended_area_max" 
-                       attrs="{'invisible': [('is_agricultural_plan', '=', False)]}"/>
+                       invisible="not is_agricultural_plan"/>
+                <field name="recommended_area_max"
+                       invisible="not is_agricultural_plan"/>
             </xpath>
             
             <!-- Modificar la vista de líneas para mostrar información agrícola -->
@@ -39,7 +39,7 @@
             <!-- Agregar pestaña de información agrícola -->
             <xpath expr="//notebook" position="inside">
                 <page string="Información Agrícola" name="agricultural_info" 
-                      attrs="{'invisible': [('is_agricultural_plan', '=', False)]}">
+                      invisible="not is_agricultural_plan">
                     <group>
                         <field name="notes" nolabel="1" placeholder="Observaciones del plan de labores..."/>
                     </group>

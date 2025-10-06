@@ -24,8 +24,8 @@
                                 <group name="basic_info">
                                     <field name="field_type" widget="radio"/>
                                     <field name="contract_id" 
-                                           attrs="{'invisible': [('field_type', '!=', 'rented')], 
-                                                   'required': [('field_type', '=', 'rented')]}"/>
+                                           invisible="field_type != 'rented'"
+                                           required="field_type == 'rented'"/>
                                     <field name="total_area" readonly="1"/>
                                 </group>
                                 <group name="location_info">
@@ -68,8 +68,8 @@
                         
                         <!-- Pestaña: Contrato (solo visible si es alquilado) -->
                         <page string="Contrato" name="contract" 
-                              attrs="{'invisible': [('field_type', '!=', 'rented')]}">
-                            <div attrs="{'invisible': [('contract_id', '!=', False)]}">
+                              invisible="field_type != 'rented'">
+                            <div invisible="contract_id != False">
                                 <p class="alert alert-warning">
                                     <strong>Atención:</strong> Este campo está marcado como alquilado 
                                     pero no tiene un contrato asociado. 
@@ -79,7 +79,7 @@
                                             class="btn-link"/>
                                 </p>
                             </div>
-                            <div attrs="{'invisible': [('contract_id', '=', False)]}">
+                            <div invisible="contract_id == False">
                                 <group>
                                     <field name="contract_id" readonly="1"/>
                                 </group>
@@ -87,7 +87,7 @@
                                         type="object" 
                                         string="Ver Detalles del Contrato" 
                                         class="btn btn-primary"
-                                        attrs="{'invisible': [('contract_id', '=', False)]}"/>
+                                        invisible="contract_id == False"/>
                             </div>
                         </page>
                     </notebook>

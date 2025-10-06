@@ -10,13 +10,13 @@
                 <header>
                     <button name="action_activate" type="object" 
                             string="Activar" class="btn-primary"
-                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                            invisible="state != 'draft'"/>
                     <button name="action_cancel" type="object" 
                             string="Cancelar" class="btn-secondary"
-                            attrs="{'invisible': [('state', 'in', ['cancelled', 'draft'])]}"/>
+                            invisible="state in ['cancelled', 'draft']"/>
                     <button name="action_set_draft" type="object" 
                             string="Volver a Borrador" class="btn-secondary"
-                            attrs="{'invisible': [('state', '=', 'draft')]}"/>
+                            invisible="state == 'draft'"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,active,expired"/>
                 </header>
                 

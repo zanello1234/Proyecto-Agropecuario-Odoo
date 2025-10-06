@@ -17,7 +17,7 @@
                 <field name="area"/>
                 <field name="is_pasture_or_verdeo"/>
                 <field name="asset_id" readonly="1" 
-                       attrs="{'invisible': [('asset_id', '=', False)]}"/>
+                       invisible="asset_id == False"/>
             </xpath>
 
             <!-- Modificar la vista para mostrar información agrícola -->
@@ -53,7 +53,7 @@
                                     type="object" 
                                     string="Crear Activo"
                                     class="btn-primary"
-                                    attrs="{'invisible': ['|', ('is_pasture_or_verdeo', '=', False), ('asset_id', '!=', False)]}"/>
+                                    invisible="not is_pasture_or_verdeo or asset_id != False"/>
                         </group>
                     </group>
                 </page>
