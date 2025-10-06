@@ -131,14 +131,16 @@ class MrpProduction(models.Model):
             else:
                 record.campaign_duration = 0
 
-    @api.depends('move_raw_ids.price_unit', 'move_raw_ids.quantity_done')
+    @api.depends('move_raw_ids.price_unit', 'move_raw_ids.move_line_ids.quantity')
     def _compute_total_cost(self):
         """Calcula el costo total de la campaña"""
         for record in self:
             total = 0
             for move in record.move_raw_ids:
-                if move.quantity_done > 0:
-                    total += move.quantity_done * move.price_unit
+                # En Odoo 18, quantity_done se calcula desde move_line_ids
+                total_quantity = sum(move.move_line_ids.mapped('quantity'))
+                if total_quantity > 0:
+                    total += total_quantity * move.price_unit
             record.total_cost = total
 
     @api.depends('total_cost', 'area')

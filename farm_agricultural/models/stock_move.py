@@ -27,6 +27,13 @@ class StockMove(models.Model):
         help="Dosis real aplicada por hectárea"
     )
     
+    # Campo de compatibilidad para quantity_done en Odoo 18
+    quantity_done = fields.Float(
+        string='Cantidad Aplicada',
+        compute='_compute_quantity_done',
+        help="Cantidad total aplicada (calculada desde move_line_ids)"
+    )
+    
     # Campos relacionados de la orden de producción agrícola
     production_field_id = fields.Many2one(
         'farm.field',
@@ -78,24 +85,34 @@ class StockMove(models.Model):
         ('cancelled', 'Cancelada')
     ], string='Estado de Aplicación', default='planned')
 
-    @api.depends('quantity_done', 'price_unit', 'production_area')
+    @api.depends('move_line_ids.quantity', 'price_unit', 'production_area')
     def _compute_cost_per_hectare_applied(self):
         """Calcula el costo por hectárea basado en la cantidad real aplicada"""
         for move in self:
             if move.production_area and move.production_area > 0:
-                total_cost = move.quantity_done * move.price_unit
+                # En Odoo 18, quantity_done se calcula desde move_line_ids
+                total_quantity = sum(move.move_line_ids.mapped('quantity'))
+                total_cost = total_quantity * move.price_unit
                 move.cost_per_hectare = total_cost / move.production_area
             else:
                 move.cost_per_hectare = 0
 
-    @api.depends('quantity_done', 'production_area')
+    @api.depends('move_line_ids.quantity', 'production_area')
     def _compute_applied_dose_per_hectare(self):
         """Calcula la dosis real aplicada por hectárea"""
         for move in self:
             if move.production_area and move.production_area > 0:
-                move.applied_dose_per_hectare = move.quantity_done / move.production_area
+                # En Odoo 18, quantity_done se calcula desde move_line_ids
+                total_quantity = sum(move.move_line_ids.mapped('quantity'))
+                move.applied_dose_per_hectare = total_quantity / move.production_area
             else:
                 move.applied_dose_per_hectare = 0
+
+    @api.depends('move_line_ids.quantity')
+    def _compute_quantity_done(self):
+        """Calcula quantity_done desde move_line_ids para compatibilidad con Odoo 18"""
+        for move in self:
+            move.quantity_done = sum(move.move_line_ids.mapped('quantity'))
 
     @api.onchange('application_date')
     def _onchange_application_date(self):
@@ -115,13 +132,14 @@ class StockMove(models.Model):
         self.ensure_one()
         self.application_state = 'cancelled'
 
-    @api.constrains('quantity_done', 'bom_line_id')
+    @api.constrains('move_line_ids', 'bom_line_id')
     def _check_dose_variance(self):
         """Valida que la dosis aplicada no exceda significativamente la planificada"""
         for move in self:
             if move.bom_line_id and move.bom_line_id.dose_per_hectare and move.production_area:
                 planned_total = move.bom_line_id.dose_per_hectare * move.production_area
-                applied_total = move.quantity_done
+                # En Odoo 18, quantity_done se calcula desde move_line_ids
+                applied_total = sum(move.move_line_ids.mapped('quantity'))
                 
                 # Permitir hasta 20% de variación
                 max_allowed = planned_total * 1.2
@@ -141,12 +159,13 @@ class StockMove(models.Model):
         """Override write para actualizar estado de aplicación"""
         result = super(StockMove, self).write(vals)
         
-        # Si se actualiza quantity_done y no está marcada como completada
-        if 'quantity_done' in vals:
+        # Si se actualizan move_line_ids, recalcular estado de aplicación
+        if 'move_line_ids' in vals or any(key.startswith('move_line_ids') for key in vals.keys()):
             for move in self:
-                if move.quantity_done > 0 and move.application_state == 'planned':
+                total_quantity = sum(move.move_line_ids.mapped('quantity'))
+                if total_quantity > 0 and move.application_state == 'planned':
                     move.application_state = 'in_progress'
-                elif move.quantity_done == move.product_uom_qty and move.application_state == 'in_progress':
+                elif total_quantity == move.product_uom_qty and move.application_state == 'in_progress':
                     move.application_state = 'completed'
         
         return result
