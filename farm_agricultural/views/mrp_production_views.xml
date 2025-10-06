@@ -132,18 +132,16 @@
                         domain="[('date_harvest', '=', False), ('state', 'in', ['progress', 'to_close'])]"/>
             </xpath>
             
+            <!-- Comentado temporalmente: no se puede usar @string en xpath selector en Odoo 18
             <xpath expr="//group[@string='Group By']" position="inside">
                 <filter string="Campo" name="group_by_field" 
                         context="{'group_by': 'field_id'}"/>
                 <filter string="Cultivo" name="group_by_crop" 
                         context="{'group_by': 'crop_id'}"/>
-                <!-- Comentado temporalmente: campo relacionado problemático
-                <filter string="Provincia" name="group_by_province" 
-                        context="{'group_by': 'field_province_id'}"/>
-                -->
                 <filter string="Tipo (Pastura/Grano)" name="group_by_type" 
                         context="{'group_by': 'is_pasture_or_verdeo'}"/>
             </xpath>
+            -->
 
         </field>
     </record>
