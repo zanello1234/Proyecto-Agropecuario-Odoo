@@ -147,3 +147,25 @@ class FarmField(models.Model):
                 ('province_id.name', operator, name)
             ] + args
         return self._search(args, limit=limit, access_rights_uid=name_get_uid)
+
+    def action_open_contract(self):
+        """Abre la vista del contrato asociado al campo"""
+        if not self.contract_id:
+            return {
+                'type': 'ir.actions.client',
+                'tag': 'display_notification',
+                'params': {
+                    'type': 'warning',
+                    'message': 'Este campo no tiene un contrato asociado.',
+                    'sticky': False,
+                }
+            }
+        
+        return {
+            'type': 'ir.actions.act_window',
+            'name': 'Contrato del Campo',
+            'res_model': 'farm.contract',
+            'view_mode': 'form',
+            'res_id': self.contract_id.id,
+            'target': 'current',
+        }
