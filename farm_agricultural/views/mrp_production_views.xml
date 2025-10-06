@@ -21,10 +21,12 @@
             </xpath>
 
             <!-- Modificar la vista para mostrar información agrícola -->
+            <!-- Comentado temporalmente: campos relacionados que pueden causar problemas
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="field_province_id" readonly="1"/>
                 <field name="lot_aptitude" readonly="1"/>
             </xpath>
+            -->
 
             <!-- Agregar pestaña de Seguimiento Agrícola -->
             <xpath expr="//notebook" position="inside">
@@ -133,8 +135,10 @@
                         context="{'group_by': 'field_id'}"/>
                 <filter string="Cultivo" name="group_by_crop" 
                         context="{'group_by': 'crop_id'}"/>
+                <!-- Comentado temporalmente: campo relacionado problemático
                 <filter string="Provincia" name="group_by_province" 
                         context="{'group_by': 'field_province_id'}"/>
+                -->
                 <filter string="Tipo (Pastura/Grano)" name="group_by_type" 
                         context="{'group_by': 'is_pasture_or_verdeo'}"/>
             </xpath>
