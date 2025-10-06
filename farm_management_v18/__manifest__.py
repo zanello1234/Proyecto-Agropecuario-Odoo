@@ -46,9 +46,6 @@
         # Security
         'security/ir.model.access.csv',
         
-        # Data
-        'data/res_country_state_data.xml',
-        
         # Views
         'views/farm_contract_views.xml',
         'views/farm_field_views.xml',
