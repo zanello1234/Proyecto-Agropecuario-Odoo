@@ -92,11 +92,13 @@
                 <field name="area" optional="show" sum="Total"/>
             </xpath>
             
+            <!-- Comentado temporalmente: campo date_planned_start no encontrado en Odoo 18
             <xpath expr="//field[@name='date_planned_start']" position="after">
                 <field name="date_planting" optional="hide"/>
                 <field name="date_harvest" optional="hide"/>
                 <field name="yield_per_hectare" optional="hide"/>
             </xpath>
+            -->
             
             <xpath expr="//field[@name='state']" position="before">
                 <field name="is_pasture_or_verdeo" optional="hide"/>
