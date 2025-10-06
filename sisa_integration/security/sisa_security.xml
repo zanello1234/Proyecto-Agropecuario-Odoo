@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data>
 
     <!-- Categoría de seguridad SISA -->
     <record model="ir.module.category" id="module_category_sisa">
@@ -23,4 +24,5 @@
         <field name="comment">Acceso completo a configuración y declaraciones SISA</field>
     </record>
 
+</data>
 </odoo>
