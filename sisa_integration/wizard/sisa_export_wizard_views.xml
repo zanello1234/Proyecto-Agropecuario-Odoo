@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-<data>
+<odoo><data>
 
     <!-- Vista Form del Asistente de Exportación -->
     <record id="view_sisa_export_wizard_form" model="ir.ui.view">

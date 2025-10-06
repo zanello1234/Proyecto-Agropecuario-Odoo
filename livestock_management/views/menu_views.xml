@@ -1,6 +1,5 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<odoo>
-<data>
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
 
     <!-- MenÃº Principal de GanaderÃ­a -->
     <menuitem id="menu_livestock_root" 
