@@ -64,7 +64,7 @@
         <field name="name">stock.move.agricultural.tree</field>
         <field name="model">stock.move</field>
         <field name="arch" type="xml">
-            <tree string="Aplicaciones de Insumos" 
+            <list string="Aplicaciones de Insumos" 
                   decoration-success="application_state == 'completed'"
                   decoration-warning="application_state == 'in_progress'"
                   decoration-danger="application_state == 'cancelled'"
@@ -78,7 +78,7 @@
                 <field name="applied_dose_per_hectare"/>
                 <field name="application_state"/>
                 <field name="operator_id"/>
-            </tree>
+            </list>
         </field>
     </record>
 

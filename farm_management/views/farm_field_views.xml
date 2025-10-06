@@ -57,12 +57,12 @@
                         <!-- Pestaña: Lotes -->
                         <page string="Lotes" name="lots">
                             <field name="lot_ids">
-                                <tree string="Lotes del Campo" editable="bottom">
+                                <list string="Lotes del Campo" editable="bottom">
                                     <field name="name"/>
                                     <field name="area"/>
                                     <field name="aptitude"/>
                                     <field name="notes"/>
-                                </tree>
+                                </list>
                             </field>
                         </page>
                         
@@ -106,7 +106,7 @@
         <field name="name">farm.field.tree</field>
         <field name="model">farm.field</field>
         <field name="arch" type="xml">
-            <tree string="Campos Agropecuarios">
+            <list string="Campos Agropecuarios">
                 <field name="name"/>
                 <field name="field_type"/>
                 <field name="total_area" sum="Total"/>
@@ -114,7 +114,7 @@
                 <field name="location"/>
                 <field name="contract_id" optional="hide"/>
                 <field name="active" invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 

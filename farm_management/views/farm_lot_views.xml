@@ -56,7 +56,7 @@
         <field name="name">farm.lot.tree</field>
         <field name="model">farm.lot</field>
         <field name="arch" type="xml">
-            <tree string="Lotes">
+            <list string="Lotes">
                 <field name="name"/>
                 <field name="field_id"/>
                 <field name="area" sum="Total"/>
@@ -64,7 +64,7 @@
                 <field name="field_province_id"/>
                 <field name="field_type" optional="hide"/>
                 <field name="active" invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 

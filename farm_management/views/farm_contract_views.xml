@@ -44,10 +44,10 @@
                     
                     <group string="Campos Asociados" name="fields">
                         <field name="field_ids" nolabel="1">
-                            <tree string="Campos">
+                            <list string="Campos">
                                 <field name="name"/>
                                 <field name="total_area" readonly="1"/>
-                            </tree>
+                            </list>
                         </field>
                     </group>
                     
@@ -69,7 +69,7 @@
         <field name="name">farm.contract.tree</field>
         <field name="model">farm.contract</field>
         <field name="arch" type="xml">
-            <tree string="Contratos de Alquiler" decoration-success="state=='active'" 
+            <list string="Contratos de Alquiler" decoration-success="state=='active'" 
                   decoration-danger="state=='expired'" decoration-muted="state=='cancelled'">
                 <field name="name"/>
                 <field name="landlord_id"/>
@@ -86,7 +86,7 @@
                        decoration-warning="state=='draft'"
                        decoration-muted="state=='cancelled'"/>
                 <field name="active" invisible="1"/>
-            </tree>
+            </list>
         </field>
     </record>
 
