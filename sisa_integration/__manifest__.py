@@ -39,13 +39,13 @@
         'stock',
         'product',
         'mrp',
-        'farm_management',
-        'farm_agricultural'
+        'farm_management_v18',
+        'farm_agricultural_v18'
     ],
     'data': [
         # Security
-        'security/ir.model.access.csv',
         'security/sisa_security.xml',
+        'security/ir.model.access.csv',
         
         # Data
         'data/sisa_campaign_config_data.xml',

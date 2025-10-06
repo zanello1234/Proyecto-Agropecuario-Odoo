@@ -4,8 +4,7 @@
     <!-- Menú principal SISA -->
     <menuitem id="menu_sisa_main" 
               name="SISA - AFIP" 
-              sequence="15"
-              web_icon="sisa_integration,static/description/icon.png"/>
+              sequence="15"/>
 
     <!-- Submenú Declaraciones -->
     <menuitem id="menu_sisa_declarations" 
