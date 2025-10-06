@@ -44,10 +44,9 @@
                     
                     <group string="Campos Asociados" name="fields">
                         <field name="field_ids" nolabel="1">
-                            <tree string="Campos" editable="bottom">
+                            <tree string="Campos">
                                 <field name="name"/>
                                 <field name="total_area" readonly="1"/>
-                                <field name="location"/>
                             </tree>
                         </field>
                     </group>
