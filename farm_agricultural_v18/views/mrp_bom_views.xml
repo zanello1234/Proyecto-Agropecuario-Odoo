@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+<data>
 
     <!-- Vista de Formulario de Plan de Labores -->
     <record id="view_mrp_bom_agricultural_form" model="ir.ui.view">
@@ -8,7 +10,7 @@
         <field name="inherit_id" ref="mrp.mrp_bom_form_view"/>
         <field name="arch" type="xml">
             
-            <!-- Agregar campos específicos agrícolas -->
+            <!-- Agregar campos especÃ­ficos agrÃ­colas -->
             <xpath expr="//field[@name='product_tmpl_id']" position="after">
                 <field name="is_agricultural_plan"/>
                 <field name="crop_type" invisible="not is_agricultural_plan"/>
@@ -21,7 +23,7 @@
                        invisible="not is_agricultural_plan"/>
             </xpath>
             
-            <!-- Modificar la vista de líneas para mostrar información agrícola -->
+            <!-- Modificar la vista de lÃ­neas para mostrar informaciÃ³n agrÃ­cola -->
             <xpath expr="//field[@name='bom_line_ids']//list" position="attributes">
                 <attribute name="decoration-info">is_critical == True</attribute>
                 <attribute name="decoration-warning">weather_dependent == True</attribute>
@@ -36,9 +38,9 @@
                 <field name="is_critical"/>
             </xpath>
             
-            <!-- Agregar pestaña de información agrícola -->
+            <!-- Agregar pestaÃ±a de informaciÃ³n agrÃ­cola -->
             <xpath expr="//notebook" position="inside">
-                <page string="Información Agrícola" name="agricultural_info" 
+                <page string="InformaciÃ³n AgrÃ­cola" name="agricultural_info" 
                       invisible="not is_agricultural_plan">
                     <group>
                         <field name="notes" nolabel="1" placeholder="Observaciones del plan de labores..."/>
@@ -49,7 +51,7 @@
         </field>
     </record>
 
-    <!-- Vista de Formulario de Línea de Plan de Labores -->
+    <!-- Vista de Formulario de LÃ­nea de Plan de Labores -->
     <record id="view_mrp_bom_line_agricultural_form" model="ir.ui.view">
         <field name="name">mrp.bom.line.agricultural.form</field>
         <field name="model">mrp.bom.line</field>
@@ -69,7 +71,7 @@
                         </group>
                     </group>
                     
-                    <group string="Dosificación">
+                    <group string="DosificaciÃ³n">
                         <group>
                             <field name="dose_per_hectare"/>
                             <field name="dose_unit"/>
@@ -100,7 +102,7 @@
         </field>
     </record>
 
-    <!-- Vista de Búsqueda para Planes de Labores -->
+    <!-- Vista de BÃºsqueda para Planes de Labores -->
     <record id="view_mrp_bom_agricultural_search" model="ir.ui.view">
         <field name="name">mrp.bom.agricultural.search</field>
         <field name="model">mrp.bom</field>
@@ -113,7 +115,7 @@
             
             <xpath expr="//filter[@name='inactive']" position="after">
                 <separator/>
-                <filter string="Planes Agrícolas" name="agricultural_plans" 
+                <filter string="Planes AgrÃ­colas" name="agricultural_plans" 
                         domain="[('is_agricultural_plan', '=', True)]"/>
                 <filter string="Cereales" name="cereals" 
                         domain="[('crop_type', '=', 'cereal')]"/>
@@ -134,5 +136,6 @@
 
         </field>
     </record>
+</data>
 
 </odoo>

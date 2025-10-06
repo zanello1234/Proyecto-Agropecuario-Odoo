@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+<data>
 
     <!-- Vista de Formulario de Contrato -->
     <record id="view_farm_contract_form" model="ir.ui.view">
@@ -90,7 +92,7 @@
         </field>
     </record>
 
-    <!-- Vista de Búsqueda/Filtros -->
+    <!-- Vista de BÃºsqueda/Filtros -->
     <record id="view_farm_contract_search" model="ir.ui.view">
         <field name="name">farm.contract.search</field>
         <field name="model">farm.contract</field>
@@ -115,7 +117,7 @@
                 <filter string="Vencen este Mes" name="expiring_this_month"
                         domain="[('end_date', '&gt;=', (context_today() + relativedelta(day=1)).strftime('%Y-%m-%d')),
                                  ('end_date', '&lt;=', (context_today() + relativedelta(day=31)).strftime('%Y-%m-%d'))]"/>
-                <filter string="Vencen en 30 días" name="expiring_soon"
+                <filter string="Vencen en 30 dÃ­as" name="expiring_soon"
                         domain="[('end_date', '&gt;=', context_today().strftime('%Y-%m-%d')),
                                  ('end_date', '&lt;=', (context_today() + datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
                 
@@ -126,7 +128,7 @@
                             context="{'group_by': 'landlord_id'}"/>
                     <filter string="Forma de Pago" name="group_by_payment" 
                             context="{'group_by': 'payment_method'}"/>
-                    <filter string="Año de Inicio" name="group_by_year" 
+                    <filter string="AÃ±o de Inicio" name="group_by_year" 
                             context="{'group_by': 'start_date:year'}"/>
                 </group>
             </search>
@@ -182,7 +184,7 @@
                                         <strong>Campos:</strong> <field name="field_count"/>
                                     </div>
                                     <div class="col-6">
-                                        <strong>Área:</strong> <field name="total_area"/> ha
+                                        <strong>Ãrea:</strong> <field name="total_area"/> ha
                                     </div>
                                 </div>
                                 <div class="oe_kanban_bottom_left">
@@ -209,7 +211,7 @@
         </field>
     </record>
 
-    <!-- Acción de Ventana -->
+    <!-- AcciÃ³n de Ventana -->
     <record id="action_farm_contract" model="ir.actions.act_window">
         <field name="name">Contratos de Alquiler</field>
         <field name="res_model">farm.contract</field>
@@ -218,17 +220,17 @@
         <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                ¡Registra tu primer contrato de alquiler!
+                Â¡Registra tu primer contrato de alquiler!
             </p>
             <p>
                 Los contratos de alquiler te permiten gestionar los campos que 
                 arriendas de terceros. Puedes controlar fechas, condiciones de pago, 
-                y asociar múltiples campos a un mismo contrato.
+                y asociar mÃºltiples campos a un mismo contrato.
             </p>
         </field>
     </record>
 
-    <!-- Acción de Formulario para crear contratos -->
+    <!-- AcciÃ³n de Formulario para crear contratos -->
     <record id="action_farm_contract_form" model="ir.actions.act_window">
         <field name="name">Nuevo Contrato</field>
         <field name="res_model">farm.contract</field>
@@ -236,5 +238,6 @@
         <field name="view_id" ref="view_farm_contract_form"/>
         <field name="target">new</field>
     </record>
+</data>
 
 </odoo>

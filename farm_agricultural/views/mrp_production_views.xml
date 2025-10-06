@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+<data>
 
     <!-- Vista de Formulario de Orden de Cultivo -->
     <record id="view_mrp_production_agricultural_form" model="ir.ui.view">
@@ -8,7 +10,7 @@
         <field name="inherit_id" ref="mrp.mrp_production_form_view"/>
         <field name="arch" type="xml">
             
-            <!-- Agregar campos específicos agrícolas en la cabecera -->
+            <!-- Agregar campos especÃ­ficos agrÃ­colas en la cabecera -->
             <xpath expr="//field[@name='product_id']" position="after">
                 <field name="field_id" options="{'no_create': True}"/>
                 <field name="lot_id" options="{'no_create': True}" 
@@ -20,7 +22,7 @@
                        invisible="asset_id == False"/>
             </xpath>
 
-            <!-- Modificar la vista para mostrar información agrícola -->
+            <!-- Modificar la vista para mostrar informaciÃ³n agrÃ­cola -->
             <!-- Comentado temporalmente: campos relacionados que pueden causar problemas
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="field_province_id" readonly="1"/>
@@ -28,10 +30,10 @@
             </xpath>
             -->
 
-            <!-- Agregar pestaña de Seguimiento Agrícola -->
+            <!-- Agregar pestaÃ±a de Seguimiento AgrÃ­cola -->
             <xpath expr="//notebook" position="inside">
-                <page string="Seguimiento Agrícola" name="agricultural_tracking">
-                    <group string="Fechas del Ciclo Agrícola">
+                <page string="Seguimiento AgrÃ­cola" name="agricultural_tracking">
+                    <group string="Fechas del Ciclo AgrÃ­cola">
                         <group>
                             <field name="date_fallow"/>
                             <field name="date_planting"/>
@@ -50,7 +52,7 @@
                             <field name="yield_per_hectare" readonly="1"/>
                         </group>
                         <group>
-                            <!-- Botón para crear activo si es pastura/verdeo -->
+                            <!-- BotÃ³n para crear activo si es pastura/verdeo -->
                             <button name="action_create_asset_for_pasture" 
                                     type="object" 
                                     string="Crear Activo"
@@ -61,7 +63,7 @@
                 </page>
             </xpath>
 
-            <!-- Modificar la pestaña de componentes para mostrar información agrícola -->
+            <!-- Modificar la pestaÃ±a de componentes para mostrar informaciÃ³n agrÃ­cola -->
             <xpath expr="//field[@name='move_raw_ids']//list" position="attributes">
                 <attribute name="decoration-success">application_state == 'completed'</attribute>
                 <attribute name="decoration-warning">application_state == 'in_progress'</attribute>
@@ -78,7 +80,7 @@
         </field>
     </record>
 
-    <!-- Vista de Lista de Órdenes de Cultivo -->
+    <!-- Vista de Lista de Ã“rdenes de Cultivo -->
     <record id="view_mrp_production_agricultural_list" model="ir.ui.view">
         <field name="name">mrp.production.agricultural.list</field>
         <field name="model">mrp.production</field>
@@ -107,7 +109,7 @@
         </field>
     </record>
 
-    <!-- Vista de Búsqueda para Órdenes de Cultivo -->
+    <!-- Vista de BÃºsqueda para Ã“rdenes de Cultivo -->
     <record id="view_mrp_production_agricultural_search" model="ir.ui.view">
         <field name="name">mrp.production.agricultural.search</field>
         <field name="model">mrp.production</field>
@@ -146,12 +148,12 @@
         </field>
     </record>
 
-    <!-- Vista Kanban para Órdenes de Cultivo -->
+    <!-- Vista Kanban para Ã“rdenes de Cultivo -->
     <record id="view_mrp_production_agricultural_kanban" model="ir.ui.view">
         <field name="name">mrp.production.agricultural.kanban</field>
         <field name="model">mrp.production</field>
         <field name="arch" type="xml">
-            <kanban string="Órdenes de Cultivo" default_group_by="state">
+            <kanban string="Ã“rdenes de Cultivo" default_group_by="state">
                 <field name="name"/>
                 <field name="field_id"/>
                 <field name="lot_id"/>
@@ -190,7 +192,7 @@
                                         <strong>Cultivo:</strong> <field name="crop_id"/>
                                     </div>
                                     <div class="col-6">
-                                        <strong>Área:</strong> <field name="area"/> ha
+                                        <strong>Ãrea:</strong> <field name="area"/> ha
                                     </div>
                                 </div>
                                 <div class="row mt-2" t-if="record.date_planting.raw_value">
@@ -224,12 +226,12 @@
         </field>
     </record>
 
-    <!-- Vista Gantt para seguimiento temporal de campañas -->
+    <!-- Vista Gantt para seguimiento temporal de campaÃ±as -->
     <record id="view_mrp_production_agricultural_gantt" model="ir.ui.view">
         <field name="name">mrp.production.agricultural.gantt</field>
         <field name="model">mrp.production</field>
         <field name="arch" type="xml">
-            <gantt string="Cronograma de Campañas"
+            <gantt string="Cronograma de CampaÃ±as"
                    date_start="date_planting"
                    date_stop="date_harvest"
                    default_group_by="field_id"
@@ -250,7 +252,7 @@
         <field name="name">mrp.production.agricultural.calendar</field>
         <field name="model">mrp.production</field>
         <field name="arch" type="xml">
-            <calendar string="Calendario de Campañas"
+            <calendar string="Calendario de CampaÃ±as"
                       date_start="date_planting"
                       date_stop="date_harvest"
                       color="crop_id"
@@ -262,5 +264,6 @@
             </calendar>
         </field>
     </record>
+</data>
 
 </odoo>

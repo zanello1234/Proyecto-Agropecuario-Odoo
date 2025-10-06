@@ -1,14 +1,16 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Vista de Formulario de Aplicación de Insumo -->
+<data>
+
+    <!-- Vista de Formulario de AplicaciÃ³n de Insumo -->
     <record id="view_stock_move_agricultural_form" model="ir.ui.view">
         <field name="name">stock.move.agricultural.form</field>
         <field name="model">stock.move</field>
         <field name="inherit_id" ref="stock.view_move_form"/>
         <field name="arch" type="xml">
             
-            <!-- Agregar información agrícola en la cabecera -->
+            <!-- Agregar informaciÃ³n agrÃ­cola en la cabecera -->
             <xpath expr="//field[@name='location_id']" position="after">
                 <field name="production_field_id" readonly="1"/>
                 <field name="production_lot_id" readonly="1"/>
@@ -18,8 +20,8 @@
             <!-- Error #16: //notebook xpath cannot be located in stock.move parent view -->
             <!-- Temporarily commented for installation - stock move form structure changed in Odoo 18 -->
             <!-- <xpath expr="//notebook" position="inside">
-                <page string="Aplicación Agrícola" name="agricultural_application">
-                    <group string="Información de Aplicación">
+                <page string="AplicaciÃ³n AgrÃ­cola" name="agricultural_application">
+                    <group string="InformaciÃ³n de AplicaciÃ³n">
                         <group>
                             <field name="application_date"/>
                             <field name="application_state"/>
@@ -32,14 +34,14 @@
                         </group>
                     </group>
                     
-                    <group string="Condiciones de Aplicación">
+                    <group string="Condiciones de AplicaciÃ³n">
                         <field name="application_weather" nolabel="1" 
-                               placeholder="Condiciones climáticas durante la aplicación..."/>
+                               placeholder="Condiciones climÃ¡ticas durante la aplicaciÃ³n..."/>
                     </group>
                     
                     <group string="Observaciones">
                         <field name="application_notes" nolabel="1" 
-                               placeholder="Notas adicionales sobre la aplicación..."/>
+                               placeholder="Notas adicionales sobre la aplicaciÃ³n..."/>
                     </group>
                     
                     <div class="oe_button_box">
@@ -50,7 +52,7 @@
                                 invisible="application_state == 'completed'"/>
                         <button name="action_mark_application_cancelled" 
                                 type="object" 
-                                string="Cancelar Aplicación" 
+                                string="Cancelar AplicaciÃ³n" 
                                 class="btn-secondary"
                                 invisible="application_state == 'cancelled'"/>
                     </div>
@@ -83,7 +85,7 @@
         </field>
     </record>
 
-    <!-- Vista de Búsqueda para Aplicaciones -->
+    <!-- Vista de BÃºsqueda para Aplicaciones -->
     <record id="view_stock_move_agricultural_search" model="ir.ui.view">
         <field name="name">stock.move.agricultural.search</field>
         <field name="model">stock.move</field>
@@ -122,7 +124,7 @@
                             context="{'group_by': 'application_state'}"/>
                     <filter string="Operador" name="group_by_operator" 
                             context="{'group_by': 'operator_id'}"/>
-                    <filter string="Fecha de Aplicación" name="group_by_date" 
+                    <filter string="Fecha de AplicaciÃ³n" name="group_by_date" 
                             context="{'group_by': 'application_date'}"/>
                 </group>
             </search>
@@ -197,7 +199,7 @@
         </field>
     </record>
 
-    <!-- Vista de Formulario para Detalle de Aplicación (StockMoveLine) -->
+    <!-- Vista de Formulario para Detalle de AplicaciÃ³n (StockMoveLine) -->
     <record id="view_stock_move_line_agricultural_form" model="ir.ui.view">
         <field name="name">stock.move.line.agricultural.form</field>
         <field name="model">stock.move.line</field>
@@ -207,8 +209,8 @@
             <!-- Error #16: //notebook xpath cannot be located in stock.move.line parent view -->
             <!-- Temporarily commented for installation - stock move line form structure changed in Odoo 18 -->
             <!-- <xpath expr="//notebook" position="inside">
-                <page string="Detalle de Aplicación" name="application_detail">
-                    <group string="Ubicación Específica">
+                <page string="Detalle de AplicaciÃ³n" name="application_detail">
+                    <group string="UbicaciÃ³n EspecÃ­fica">
                         <group>
                             <field name="application_sector"/>
                             <field name="gps_coordinates"/>
@@ -229,7 +231,7 @@
         </field>
     </record>
 
-    <!-- Acción de Ventana para Aplicaciones Agrícolas -->
+    <!-- AcciÃ³n de Ventana para Aplicaciones AgrÃ­colas -->
     <record id="action_stock_move_agricultural" model="ir.actions.act_window">
         <field name="name">Aplicaciones de Insumos</field>
         <field name="res_model">stock.move</field>
@@ -238,13 +240,14 @@
         <field name="context">{'search_default_completed': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                ¡No hay aplicaciones registradas!
+                Â¡No hay aplicaciones registradas!
             </p>
             <p>
-                Las aplicaciones de insumos se crean automáticamente desde las órdenes de cultivo.
-                Registra el consumo de insumos en tus campañas para ver el seguimiento aquí.
+                Las aplicaciones de insumos se crean automÃ¡ticamente desde las Ã³rdenes de cultivo.
+                Registra el consumo de insumos en tus campaÃ±as para ver el seguimiento aquÃ­.
             </p>
         </field>
     </record>
+</data>
 
 </odoo>

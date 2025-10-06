@@ -1,12 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Menú Principal -->
+<data>
+
+    <!-- MenÃº Principal -->
     <menuitem id="menu_farm_management_root" 
-              name="Gestión de Campos" 
+              name="GestiÃ³n de Campos" 
               sequence="10"/>
 
-    <!-- Submenús -->
+    <!-- SubmenÃºs -->
     <menuitem id="menu_farm_fields" 
               name="Campos" 
               parent="menu_farm_management_root"
@@ -25,13 +27,13 @@
               action="action_farm_contract" 
               sequence="30"/>
 
-    <!-- Submenú de Configuración -->
+    <!-- SubmenÃº de ConfiguraciÃ³n -->
     <menuitem id="menu_farm_config" 
-              name="Configuración" 
+              name="ConfiguraciÃ³n" 
               parent="menu_farm_management_root"
               sequence="100"/>
 
-    <!-- Accesos rápidos en el menú de configuración -->
+    <!-- Accesos rÃ¡pidos en el menÃº de configuraciÃ³n -->
     <menuitem id="menu_farm_config_provinces" 
               name="Provincias" 
               parent="menu_farm_config"
@@ -43,5 +45,6 @@
               parent="menu_farm_config"
               action="base.action_partner_form" 
               sequence="20"/>
+</data>
 
 </odoo>

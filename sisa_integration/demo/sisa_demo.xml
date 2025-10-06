@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data noupdate="1">
 
     <!-- Productos demo para campaña fina -->
     <record id="product_wheat_demo" model="product.product">
@@ -27,4 +28,5 @@
         <field name="type">product</field>
     </record>
 
+</data>
 </odoo>

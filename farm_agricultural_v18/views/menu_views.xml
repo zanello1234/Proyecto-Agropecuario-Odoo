@@ -1,34 +1,36 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Renombrar el menú principal de Fabricación a Producción Agrícola -->
+<data>
+
+    <!-- Renombrar el menÃº principal de FabricaciÃ³n a ProducciÃ³n AgrÃ­cola -->
     <record id="mrp.menu_mrp_root" model="ir.ui.menu">
-        <field name="name">Producción Agrícola</field>
+        <field name="name">ProducciÃ³n AgrÃ­cola</field>
     </record>
 
-    <!-- Renombrar "Órdenes de Producción" a "Órdenes de Cultivo" -->
+    <!-- Renombrar "Ã“rdenes de ProducciÃ³n" a "Ã“rdenes de Cultivo" -->
     <record id="mrp.menu_mrp_production_action" model="ir.ui.menu">
-        <field name="name">Órdenes de Cultivo</field>
+        <field name="name">Ã“rdenes de Cultivo</field>
     </record>
 
-    <!-- Modificar la acción de órdenes de producción para mostrar vista agrícola -->
+    <!-- Modificar la acciÃ³n de Ã³rdenes de producciÃ³n para mostrar vista agrÃ­cola -->
     <record id="action_mrp_production_agricultural" model="ir.actions.act_window">
-        <field name="name">Órdenes de Cultivo</field>
+        <field name="name">Ã“rdenes de Cultivo</field>
         <field name="res_model">mrp.production</field>
         <field name="view_mode">kanban,list,form,gantt,calendar</field>
         <field name="search_view_id" ref="view_mrp_production_agricultural_search"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                ¡Crea tu primera orden de cultivo!
+                Â¡Crea tu primera orden de cultivo!
             </p>
             <p>
-                Las órdenes de cultivo te permiten gestionar el ciclo completo de producción agrícola,
-                desde la planificación hasta la cosecha, incluyendo el seguimiento de insumos y labores.
+                Las Ã³rdenes de cultivo te permiten gestionar el ciclo completo de producciÃ³n agrÃ­cola,
+                desde la planificaciÃ³n hasta la cosecha, incluyendo el seguimiento de insumos y labores.
             </p>
         </field>
     </record>
 
-    <!-- Reemplazar la acción del menú de órdenes de producción -->
+    <!-- Reemplazar la acciÃ³n del menÃº de Ã³rdenes de producciÃ³n -->
     <record id="mrp.menu_mrp_production_action" model="ir.ui.menu">
         <field name="action" ref="action_mrp_production_agricultural"/>
     </record>
@@ -38,20 +40,20 @@
         <field name="name">Planes de Labores</field>
     </record>
 
-    <!-- Submenú para Aplicaciones de Insumos -->
+    <!-- SubmenÃº para Aplicaciones de Insumos -->
     <menuitem id="menu_agricultural_applications" 
               name="Aplicaciones de Insumos" 
               parent="mrp.menu_mrp_root"
               action="action_stock_move_agricultural" 
               sequence="15"/>
 
-    <!-- Submenú para Reportes Agrícolas -->
+    <!-- SubmenÃº para Reportes AgrÃ­colas -->
     <menuitem id="menu_agricultural_reports" 
-              name="Reportes Agrícolas" 
+              name="Reportes AgrÃ­colas" 
               parent="mrp.menu_mrp_root"
               sequence="90"/>
 
-    <!-- Submenú para Dashboard Agrícola -->
+    <!-- SubmenÃº para Dashboard AgrÃ­cola -->
     <menuitem id="menu_agricultural_dashboard" 
               name="Dashboard" 
               parent="mrp.menu_mrp_root"
@@ -59,7 +61,7 @@
 
     <!-- Acciones adicionales para reportes -->
     <record id="action_agricultural_production_report" model="ir.actions.act_window">
-        <field name="name">Reporte de Producción por Campo</field>
+        <field name="name">Reporte de ProducciÃ³n por Campo</field>
         <field name="res_model">mrp.production</field>
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('state', '=', 'done')]</field>
@@ -70,7 +72,7 @@
     </record>
 
     <menuitem id="menu_agricultural_production_report" 
-              name="Producción por Campo" 
+              name="ProducciÃ³n por Campo" 
               parent="menu_agricultural_reports"
               action="action_agricultural_production_report" 
               sequence="10"/>
@@ -93,7 +95,7 @@
               sequence="20"/>
 
     <record id="action_agricultural_cost_report" model="ir.actions.act_window">
-        <field name="name">Reporte de Costos por Hectárea</field>
+        <field name="name">Reporte de Costos por HectÃ¡rea</field>
         <field name="res_model">mrp.production</field>
         <field name="view_mode">pivot,graph</field>
         <field name="domain">[('state', '=', 'done'), ('cost_per_hectare', '>', 0)]</field>
@@ -104,17 +106,17 @@
     </record>
 
     <menuitem id="menu_agricultural_cost_report" 
-              name="Costos por Hectárea" 
+              name="Costos por HectÃ¡rea" 
               parent="menu_agricultural_reports"
               action="action_agricultural_cost_report" 
               sequence="30"/>
 
-    <!-- Vista de gráfico para dashboard -->
+    <!-- Vista de grÃ¡fico para dashboard -->
     <record id="view_mrp_production_agricultural_graph" model="ir.ui.view">
         <field name="name">mrp.production.agricultural.graph</field>
         <field name="model">mrp.production</field>
         <field name="arch" type="xml">
-            <graph string="Análisis de Producción Agrícola" type="bar">
+            <graph string="AnÃ¡lisis de ProducciÃ³n AgrÃ­cola" type="bar">
                 <field name="field_id" type="row"/>
                 <field name="area" type="measure"/>
                 <field name="total_harvest_kg" type="measure"/>
@@ -128,7 +130,7 @@
         <field name="name">mrp.production.agricultural.pivot</field>
         <field name="model">mrp.production</field>
         <field name="arch" type="xml">
-            <pivot string="Análisis Pivote de Producción">
+            <pivot string="AnÃ¡lisis Pivote de ProducciÃ³n">
                 <field name="field_id" type="row"/>
                 <field name="crop_id" type="col"/>
                 <field name="area" type="measure"/>
@@ -139,9 +141,9 @@
         </field>
     </record>
 
-    <!-- Acción para dashboard -->
+    <!-- AcciÃ³n para dashboard -->
     <record id="action_agricultural_dashboard" model="ir.actions.act_window">
-        <field name="name">Dashboard Agrícola</field>
+        <field name="name">Dashboard AgrÃ­cola</field>
         <field name="res_model">mrp.production</field>
         <field name="view_mode">graph,pivot,kanban</field>
         <field name="domain">[('state', 'in', ['progress', 'done', 'to_close'])]</field>
@@ -152,9 +154,10 @@
     </record>
 
     <menuitem id="menu_agricultural_dashboard_action" 
-              name="Análisis de Producción" 
+              name="AnÃ¡lisis de ProducciÃ³n" 
               parent="menu_agricultural_dashboard"
               action="action_agricultural_dashboard" 
               sequence="10"/>
+</data>
 
 </odoo>

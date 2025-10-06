@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+<data>
 
     <!-- Vista de Formulario de Campo -->
     <record id="view_farm_field_form" model="ir.ui.view">
@@ -18,8 +20,8 @@
                     </div>
                     
                     <notebook>
-                        <!-- Pestaña: Información General -->
-                        <page string="Información General" name="general">
+                        <!-- PestaÃ±a: InformaciÃ³n General -->
+                        <page string="InformaciÃ³n General" name="general">
                             <group>
                                 <group name="basic_info">
                                     <field name="field_type" widget="radio"/>
@@ -37,15 +39,15 @@
                                 </group>
                             </group>
                             
-                            <!-- Sección de Mapa -->
-                            <group string="Geolocalización" name="geolocation">
+                            <!-- SecciÃ³n de Mapa -->
+                            <group string="GeolocalizaciÃ³n" name="geolocation">
                                 <field name="geolocation_points" 
                                        placeholder='Ejemplo: [{"lat": -34.6037, "lng": -58.3816}]'
-                                       help="Coordenadas en formato JSON que definen el perímetro del campo"/>
-                                <!-- Aquí se puede agregar un widget de mapa en el futuro -->
+                                       help="Coordenadas en formato JSON que definen el perÃ­metro del campo"/>
+                                <!-- AquÃ­ se puede agregar un widget de mapa en el futuro -->
                                 <div class="alert alert-info" role="alert">
-                                    <strong>Nota:</strong> La visualización del mapa será implementada 
-                                    con el módulo de mapas correspondiente.
+                                    <strong>Nota:</strong> La visualizaciÃ³n del mapa serÃ¡ implementada 
+                                    con el mÃ³dulo de mapas correspondiente.
                                 </div>
                             </group>
                             
@@ -54,7 +56,7 @@
                             </group>
                         </page>
                         
-                        <!-- Pestaña: Lotes -->
+                        <!-- PestaÃ±a: Lotes -->
                         <page string="Lotes" name="lots">
                             <field name="lot_ids">
                                 <list string="Lotes del Campo" editable="bottom">
@@ -66,12 +68,12 @@
                             </field>
                         </page>
                         
-                        <!-- Pestaña: Contrato (solo visible si es alquilado) -->
+                        <!-- PestaÃ±a: Contrato (solo visible si es alquilado) -->
                         <page string="Contrato" name="contract" 
                               invisible="field_type != 'rented'">
                             <div invisible="contract_id != False">
                                 <p class="alert alert-warning">
-                                    <strong>Atención:</strong> Este campo está marcado como alquilado 
+                                    <strong>AtenciÃ³n:</strong> Este campo estÃ¡ marcado como alquilado 
                                     pero no tiene un contrato asociado. 
                                     <button name="%(action_farm_contract_form)d" 
                                             type="action" 
@@ -118,7 +120,7 @@
         </field>
     </record>
 
-    <!-- Vista de Búsqueda/Filtros -->
+    <!-- Vista de BÃºsqueda/Filtros -->
     <record id="view_farm_field_search" model="ir.ui.view">
         <field name="name">farm.field.search</field>
         <field name="model">farm.field</field>
@@ -209,7 +211,7 @@
         </field>
     </record>
 
-    <!-- Acción de Ventana -->
+    <!-- AcciÃ³n de Ventana -->
     <record id="action_farm_field" model="ir.actions.act_window">
         <field name="name">Campos</field>
         <field name="res_model">farm.field</field>
@@ -218,14 +220,15 @@
         <field name="context">{'search_default_active_fields': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                ¡Registra tu primer campo!
+                Â¡Registra tu primer campo!
             </p>
             <p>
-                Los campos son la base de tu gestión agropecuaria. 
-                Aquí puedes registrar tanto campos propios como alquilados, 
-                definir su ubicación geográfica y dividirlos en lotes operativos.
+                Los campos son la base de tu gestiÃ³n agropecuaria. 
+                AquÃ­ puedes registrar tanto campos propios como alquilados, 
+                definir su ubicaciÃ³n geogrÃ¡fica y dividirlos en lotes operativos.
             </p>
         </field>
     </record>
+</data>
 
 </odoo>
