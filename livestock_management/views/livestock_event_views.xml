@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+<data>
 
     <!-- Vista de Formulario de Evento -->
     <record id="view_livestock_event_form" model="ir.ui.view">
@@ -15,12 +17,12 @@
                     </div>
                     
                     <group>
-                        <group name="event_info" string="Información del Evento">
+                        <group name="event_info" string="InformaciÃ³n del Evento">
                             <field name="event_type"/>
                             <field name="date"/>
                             <field name="animal_id" options="{'no_create': True}"/>
                         </group>
-                        <group name="animal_info" string="Información del Animal">
+                        <group name="animal_info" string="InformaciÃ³n del Animal">
                             <field name="animal_ear_tag" readonly="1"/>
                             <field name="animal_breed" readonly="1"/>
                             <field name="animal_gender" readonly="1"/>
@@ -103,8 +105,8 @@
                                 <div class="o_kanban_record_body">
                                     <div>
                                         <strong><field name="animal_breed"/></strong>
-                                        <span t-if="record.animal_gender.raw_value == 'male'" class="text-primary">♂</span>
-                                        <span t-if="record.animal_gender.raw_value == 'female'" class="text-info">♀</span>
+                                        <span t-if="record.animal_gender.raw_value == 'male'" class="text-primary">â™‚</span>
+                                        <span t-if="record.animal_gender.raw_value == 'female'" class="text-info">â™€</span>
                                     </div>
                                     <div t-if="record.cause_of_death.value and record.event_type.raw_value == 'death'">
                                         <small class="text-muted">Causa: <field name="cause_of_death"/></small>
@@ -118,7 +120,7 @@
         </field>
     </record>
 
-    <!-- Vista de Búsqueda de Eventos -->
+    <!-- Vista de BÃºsqueda de Eventos -->
     <record id="view_livestock_event_search" model="ir.ui.view">
         <field name="name">livestock.event.search</field>
         <field name="model">livestock.event</field>
@@ -135,7 +137,7 @@
                 <separator/>
                 <filter string="Este Mes" name="this_month" 
                         domain="[('date', '&gt;=', (context_today() - datetime.timedelta(days=30)).strftime('%Y-%m-%d'))]"/>
-                <filter string="Este Año" name="this_year" 
+                <filter string="Este AÃ±o" name="this_year" 
                         domain="[('date', '&gt;=', context_today().strftime('%Y-01-01'))]"/>
                 
                 <separator/>
@@ -146,29 +148,29 @@
                     <filter string="Tipo de Evento" name="group_by_type" context="{'group_by': 'event_type'}"/>
                     <filter string="Fecha" name="group_by_date" context="{'group_by': 'date'}"/>
                     <filter string="Raza" name="group_by_breed" context="{'group_by': 'animal_breed'}"/>
-                    <filter string="Género" name="group_by_gender" context="{'group_by': 'animal_gender'}"/>
+                    <filter string="GÃ©nero" name="group_by_gender" context="{'group_by': 'animal_gender'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <!-- Acción de Ventana para Eventos -->
+    <!-- AcciÃ³n de Ventana para Eventos -->
     <record id="action_livestock_event" model="ir.actions.act_window">
         <field name="name">Eventos de Vida</field>
         <field name="res_model">livestock.event</field>
         <field name="view_mode">kanban,list,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                ¡No hay eventos registrados!
+                Â¡No hay eventos registrados!
             </p>
             <p>
-                Los eventos de nacimiento se crean automáticamente al registrar un animal.
+                Los eventos de nacimiento se crean automÃ¡ticamente al registrar un animal.
                 Los eventos de mortandad se registran manualmente cuando ocurren.
             </p>
         </field>
     </record>
 
-    <!-- Acción específica para Nacimientos -->
+    <!-- AcciÃ³n especÃ­fica para Nacimientos -->
     <record id="action_livestock_birth_events" model="ir.actions.act_window">
         <field name="name">Nacimientos</field>
         <field name="res_model">livestock.event</field>
@@ -177,16 +179,16 @@
         <field name="context">{'default_event_type': 'birth', 'search_default_this_year': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                ¡No hay nacimientos registrados!
+                Â¡No hay nacimientos registrados!
             </p>
             <p>
-                Los nacimientos se registran automáticamente cuando crea un nuevo animal.
-                También puede crear eventos de nacimiento manualmente.
+                Los nacimientos se registran automÃ¡ticamente cuando crea un nuevo animal.
+                TambiÃ©n puede crear eventos de nacimiento manualmente.
             </p>
         </field>
     </record>
 
-    <!-- Acción específica para Mortandades -->
+    <!-- AcciÃ³n especÃ­fica para Mortandades -->
     <record id="action_livestock_death_events" model="ir.actions.act_window">
         <field name="name">Mortandades</field>
         <field name="res_model">livestock.event</field>
@@ -195,13 +197,14 @@
         <field name="context">{'default_event_type': 'death', 'search_default_this_year': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                ¡No hay mortandades registradas!
+                Â¡No hay mortandades registradas!
             </p>
             <p>
-                Registre las mortandades utilizando el botón "Registrar Mortandad" 
-                desde la ficha del animal o créelas directamente aquí.
+                Registre las mortandades utilizando el botÃ³n "Registrar Mortandad" 
+                desde la ficha del animal o crÃ©elas directamente aquÃ­.
             </p>
         </field>
     </record>
+</data>
 
 </odoo>

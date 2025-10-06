@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+<data>
 
     <!-- Vista de Formulario del Animal -->
     <record id="view_livestock_animal_form" model="ir.ui.view">
@@ -276,4 +277,5 @@
         </field>
     </record>
 
+</data>
 </odoo>

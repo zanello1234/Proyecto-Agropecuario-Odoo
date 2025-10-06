@@ -1,13 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <!-- Menú Principal de Ganadería -->
+<data>
+
+    <!-- MenÃº Principal de GanaderÃ­a -->
     <menuitem id="menu_livestock_root" 
-              name="Ganadería" 
+              name="GanaderÃ­a" 
               sequence="50" 
               web_icon="livestock_management,static/description/icon.png"/>
 
-    <!-- Menú de Animales -->
+    <!-- MenÃº de Animales -->
     <menuitem id="menu_livestock_animals" 
               name="Animales" 
               parent="menu_livestock_root" 
@@ -25,7 +27,7 @@
               action="action_livestock_breed" 
               sequence="20"/>
 
-    <!-- Menú de Eventos -->
+    <!-- MenÃº de Eventos -->
     <menuitem id="menu_livestock_events" 
               name="Eventos" 
               parent="menu_livestock_root" 
@@ -49,7 +51,7 @@
               action="action_livestock_event" 
               sequence="30"/>
 
-    <!-- Menú de Sanidad -->
+    <!-- MenÃº de Sanidad -->
     <menuitem id="menu_livestock_health" 
               name="Sanidad" 
               parent="menu_livestock_root" 
@@ -61,7 +63,7 @@
               action="action_livestock_health_log" 
               sequence="10"/>
 
-    <!-- Menú de Pesajes -->
+    <!-- MenÃº de Pesajes -->
     <menuitem id="menu_livestock_weighing" 
               name="Pesajes" 
               parent="menu_livestock_root" 
@@ -73,13 +75,13 @@
               action="action_livestock_weighing" 
               sequence="10"/>
 
-    <!-- Menú de Informes (para futuras expansiones) -->
+    <!-- MenÃº de Informes (para futuras expansiones) -->
     <menuitem id="menu_livestock_reports" 
               name="Informes" 
               parent="menu_livestock_root" 
               sequence="50"/>
 
-    <!-- Submenús de Informes (placeholders para futuras funcionalidades) -->
+    <!-- SubmenÃºs de Informes (placeholders para futuras funcionalidades) -->
     <menuitem id="menu_livestock_mortality_report" 
               name="Informe de Mortandad" 
               parent="menu_livestock_reports" 
@@ -94,5 +96,6 @@
               name="Informe Sanitario" 
               parent="menu_livestock_reports" 
               sequence="30"/>
+</data>
 
 </odoo>

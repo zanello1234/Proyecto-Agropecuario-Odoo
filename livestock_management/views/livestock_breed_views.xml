@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <odoo>
+
+<data>
 
     <!-- Vista de Formulario de Raza -->
     <record id="view_livestock_breed_form" model="ir.ui.view">
@@ -23,7 +25,7 @@
                     </div>
                     
                     <group>
-                        <group name="basic_info" string="Información Básica">
+                        <group name="basic_info" string="InformaciÃ³n BÃ¡sica">
                             <field name="code"/>
                             <field name="breed_type"/>
                             <field name="origin_country"/>
@@ -35,8 +37,8 @@
                         </group>
                     </group>
                     
-                    <group string="Descripción">
-                        <field name="description" nolabel="1" placeholder="Características generales de la raza..."/>
+                    <group string="DescripciÃ³n">
+                        <field name="description" nolabel="1" placeholder="CaracterÃ­sticas generales de la raza..."/>
                     </group>
                 </sheet>
             </form>
@@ -96,7 +98,7 @@
                                             <small>Tipo:</small><br/>
                                             <span t-if="record.breed_type.raw_value == 'beef'" class="badge badge-primary">Carne</span>
                                             <span t-if="record.breed_type.raw_value == 'dairy'" class="badge badge-info">Lechera</span>
-                                            <span t-if="record.breed_type.raw_value == 'dual'" class="badge badge-success">Doble Propósito</span>
+                                            <span t-if="record.breed_type.raw_value == 'dual'" class="badge badge-success">Doble PropÃ³sito</span>
                                         </div>
                                         <div class="col-6">
                                             <small>Animales:</small><br/>
@@ -107,10 +109,10 @@
                                         <div class="col-12">
                                             <small>Peso promedio:</small><br/>
                                             <t t-if="record.average_weight_male.value">
-                                                ♂ <field name="average_weight_male"/>kg
+                                                â™‚ <field name="average_weight_male"/>kg
                                             </t>
                                             <t t-if="record.average_weight_female.value">
-                                                ♀ <field name="average_weight_female"/>kg
+                                                â™€ <field name="average_weight_female"/>kg
                                             </t>
                                         </div>
                                     </div>
@@ -123,15 +125,15 @@
         </field>
     </record>
 
-    <!-- Vista de Búsqueda de Razas -->
+    <!-- Vista de BÃºsqueda de Razas -->
     <record id="view_livestock_breed_search" model="ir.ui.view">
         <field name="name">livestock.breed.search</field>
         <field name="model">livestock.breed</field>
         <field name="arch" type="xml">
             <search string="Buscar Razas">
                 <field name="name" string="Nombre"/>
-                <field name="code" string="Código"/>
-                <field name="origin_country" string="País"/>
+                <field name="code" string="CÃ³digo"/>
+                <field name="origin_country" string="PaÃ­s"/>
                 
                 <separator/>
                 <filter string="Activas" name="active_breeds" domain="[('active', '=', True)]"/>
@@ -140,7 +142,7 @@
                 <separator/>
                 <filter string="Carne" name="beef_breeds" domain="[('breed_type', '=', 'beef')]"/>
                 <filter string="Lecheras" name="dairy_breeds" domain="[('breed_type', '=', 'dairy')]"/>
-                <filter string="Doble Propósito" name="dual_breeds" domain="[('breed_type', '=', 'dual')]"/>
+                <filter string="Doble PropÃ³sito" name="dual_breeds" domain="[('breed_type', '=', 'dual')]"/>
                 
                 <separator/>
                 <filter string="Con Animales" name="with_animals" domain="[('animal_count', '>', 0)]"/>
@@ -148,13 +150,13 @@
                 
                 <group expand="0" string="Agrupar Por">
                     <filter string="Tipo de Raza" name="group_by_type" context="{'group_by': 'breed_type'}"/>
-                    <filter string="País de Origen" name="group_by_country" context="{'group_by': 'origin_country'}"/>
+                    <filter string="PaÃ­s de Origen" name="group_by_country" context="{'group_by': 'origin_country'}"/>
                 </group>
             </search>
         </field>
     </record>
 
-    <!-- Acción de Ventana para Razas -->
+    <!-- AcciÃ³n de Ventana para Razas -->
     <record id="action_livestock_breed" model="ir.actions.act_window">
         <field name="name">Razas</field>
         <field name="res_model">livestock.breed</field>
@@ -162,13 +164,14 @@
         <field name="context">{'search_default_active_breeds': 1}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
-                ¡Configure las razas de su ganado!
+                Â¡Configure las razas de su ganado!
             </p>
             <p>
                 Defina las diferentes razas que maneja en su establecimiento.
-                Esto le permitirá clasificar sus animales y hacer análisis por raza.
+                Esto le permitirÃ¡ clasificar sus animales y hacer anÃ¡lisis por raza.
             </p>
         </field>
     </record>
+</data>
 
 </odoo>
