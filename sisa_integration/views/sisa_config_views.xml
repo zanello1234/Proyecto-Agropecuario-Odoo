@@ -6,7 +6,7 @@
         <field name="name">sisa.campaign.config.tree</field>
         <field name="model">sisa.campaign.config</field>
         <field name="arch" type="xml">
-            <tree string="Configuración de Campañas SISA" editable="bottom">
+            <tree editable="bottom">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="campaign_type"/>

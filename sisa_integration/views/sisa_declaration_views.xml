@@ -6,7 +6,7 @@
         <field name="name">sisa.declaration.tree</field>
         <field name="model">sisa.declaration</field>
         <field name="arch" type="xml">
-            <tree string="Declaraciones SISA" decoration-info="state=='draft'" 
+            <tree decoration-info="state=='draft'" 
                   decoration-success="state=='presented'" decoration-warning="state=='generated'">
                 <field name="display_name"/>
                 <field name="declaration_type"/>
