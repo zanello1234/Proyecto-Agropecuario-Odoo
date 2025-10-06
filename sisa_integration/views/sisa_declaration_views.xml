@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo><data>
+<odoo>
+    <data>
 
     <!-- Vista Tree de Declaraciones SISA -->
     <record id="view_sisa_declaration_tree" model="ir.ui.view">

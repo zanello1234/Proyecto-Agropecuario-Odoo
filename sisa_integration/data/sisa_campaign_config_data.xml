@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo><data noupdate="1">
+<odoo>
+    <data noupdate="1">
 
     <!-- Configuración de Campaña Fina -->
     <record id="sisa_campaign_config_fine" model="sisa.campaign.config">

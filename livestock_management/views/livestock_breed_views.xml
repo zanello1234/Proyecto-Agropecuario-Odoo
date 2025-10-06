@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo><data>
+<odoo>
+    <data>
 
     <!-- Vista de Formulario de Raza -->
     <record id="view_livestock_breed_form" model="ir.ui.view">

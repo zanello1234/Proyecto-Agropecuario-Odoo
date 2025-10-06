@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo><data>
+<odoo>
+    <data>
 
     <!-- Vista Tree de Configuración de Campañas -->
     <record id="view_sisa_campaign_config_tree" model="ir.ui.view">
