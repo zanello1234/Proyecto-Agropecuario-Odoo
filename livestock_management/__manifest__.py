@@ -56,7 +56,7 @@
     'depends': [
         'base',
         'product',
-        'farm_management',  # Para integración con campos y lotes
+        'farm_management_v18',  # Para integración con campos y lotes
     ],
     'data': [
         # Security

@@ -39,7 +39,7 @@
         'mrp',
         'stock',
         'account_asset',
-        'farm_management',  # Módulo de gestión de campos
+        'farm_management_v18',  # Módulo de gestión de campos
     ],
     'data': [
         # Security
