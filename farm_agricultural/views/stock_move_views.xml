@@ -60,8 +60,8 @@
     </record>
 
     <!-- Vista de Lista de Aplicaciones -->
-    <record id="view_stock_move_agricultural_tree" model="ir.ui.view">
-        <field name="name">stock.move.agricultural.tree</field>
+    <record id="view_stock_move_agricultural_list" model="ir.ui.view">
+        <field name="name">stock.move.agricultural.list</field>
         <field name="model">stock.move</field>
         <field name="arch" type="xml">
             <list string="Aplicaciones de Insumos" 
@@ -230,7 +230,7 @@
     <record id="action_stock_move_agricultural" model="ir.actions.act_window">
         <field name="name">Aplicaciones de Insumos</field>
         <field name="res_model">stock.move</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="domain">[('production_id', '!=', False)]</field>
         <field name="context">{'search_default_completed': 1}</field>
         <field name="help" type="html">

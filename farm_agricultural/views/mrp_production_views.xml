@@ -60,13 +60,13 @@
             </xpath>
 
             <!-- Modificar la pestaña de componentes para mostrar información agrícola -->
-            <xpath expr="//field[@name='move_raw_ids']//tree" position="attributes">
+            <xpath expr="//field[@name='move_raw_ids']//list" position="attributes">
                 <attribute name="decoration-success">application_state == 'completed'</attribute>
                 <attribute name="decoration-warning">application_state == 'in_progress'</attribute>
                 <attribute name="decoration-muted">application_state == 'cancelled'</attribute>
             </xpath>
             
-            <xpath expr="//field[@name='move_raw_ids']//tree//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='move_raw_ids']//list//field[@name='product_id']" position="after">
                 <field name="application_date"/>
                 <field name="cost_per_hectare" readonly="1"/>
                 <field name="applied_dose_per_hectare" readonly="1"/>
@@ -77,8 +77,8 @@
     </record>
 
     <!-- Vista de Lista de Órdenes de Cultivo -->
-    <record id="view_mrp_production_agricultural_tree" model="ir.ui.view">
-        <field name="name">mrp.production.agricultural.tree</field>
+    <record id="view_mrp_production_agricultural_list" model="ir.ui.view">
+        <field name="name">mrp.production.agricultural.list</field>
         <field name="model">mrp.production</field>
         <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
         <field name="arch" type="xml">

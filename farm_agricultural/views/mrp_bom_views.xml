@@ -22,12 +22,12 @@
             </xpath>
             
             <!-- Modificar la vista de líneas para mostrar información agrícola -->
-            <xpath expr="//field[@name='bom_line_ids']//tree" position="attributes">
+            <xpath expr="//field[@name='bom_line_ids']//list" position="attributes">
                 <attribute name="decoration-info">is_critical == True</attribute>
                 <attribute name="decoration-warning">weather_dependent == True</attribute>
             </xpath>
             
-            <xpath expr="//field[@name='bom_line_ids']//tree//field[@name='product_id']" position="after">
+            <xpath expr="//field[@name='bom_line_ids']//list//field[@name='product_id']" position="after">
                 <field name="application_stage"/>
                 <field name="dose_per_hectare"/>
                 <field name="dose_unit"/>
@@ -86,8 +86,8 @@
     </record>
 
     <!-- Vista de Lista de Planes de Labores -->
-    <record id="view_mrp_bom_agricultural_tree" model="ir.ui.view">
-        <field name="name">mrp.bom.agricultural.tree</field>
+    <record id="view_mrp_bom_agricultural_list" model="ir.ui.view">
+        <field name="name">mrp.bom.agricultural.list</field>
         <field name="model">mrp.bom</field>
         <field name="inherit_id" ref="mrp.mrp_bom_tree_view"/>
         <field name="arch" type="xml">

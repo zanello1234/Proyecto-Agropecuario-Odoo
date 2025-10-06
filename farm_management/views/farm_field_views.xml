@@ -102,8 +102,8 @@
     </record>
 
     <!-- Vista de Lista de Campos -->
-    <record id="view_farm_field_tree" model="ir.ui.view">
-        <field name="name">farm.field.tree</field>
+    <record id="view_farm_field_list" model="ir.ui.view">
+        <field name="name">farm.field.list</field>
         <field name="model">farm.field</field>
         <field name="arch" type="xml">
             <list string="Campos Agropecuarios">
@@ -213,7 +213,7 @@
     <record id="action_farm_field" model="ir.actions.act_window">
         <field name="name">Campos</field>
         <field name="res_model">farm.field</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="view_farm_field_search"/>
         <field name="context">{'search_default_active_fields': 1}</field>
         <field name="help" type="html">

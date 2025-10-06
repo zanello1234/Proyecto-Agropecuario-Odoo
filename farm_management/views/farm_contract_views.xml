@@ -65,8 +65,8 @@
     </record>
 
     <!-- Vista de Lista de Contratos -->
-    <record id="view_farm_contract_tree" model="ir.ui.view">
-        <field name="name">farm.contract.tree</field>
+    <record id="view_farm_contract_list" model="ir.ui.view">
+        <field name="name">farm.contract.list</field>
         <field name="model">farm.contract</field>
         <field name="arch" type="xml">
             <list string="Contratos de Alquiler" decoration-success="state=='active'" 
@@ -213,7 +213,7 @@
     <record id="action_farm_contract" model="ir.actions.act_window">
         <field name="name">Contratos de Alquiler</field>
         <field name="res_model">farm.contract</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="view_farm_contract_search"/>
         <field name="context">{'search_default_active': 1}</field>
         <field name="help" type="html">

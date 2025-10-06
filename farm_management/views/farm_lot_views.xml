@@ -52,8 +52,8 @@
     </record>
 
     <!-- Vista de Lista de Lotes -->
-    <record id="view_farm_lot_tree" model="ir.ui.view">
-        <field name="name">farm.lot.tree</field>
+    <record id="view_farm_lot_list" model="ir.ui.view">
+        <field name="name">farm.lot.list</field>
         <field name="model">farm.lot</field>
         <field name="arch" type="xml">
             <list string="Lotes">
@@ -162,7 +162,7 @@
     <record id="action_farm_lot" model="ir.actions.act_window">
         <field name="name">Lotes</field>
         <field name="res_model">farm.lot</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,list,form</field>
         <field name="search_view_id" ref="view_farm_lot_search"/>
         <field name="context">{'search_default_active_lots': 1}</field>
         <field name="help" type="html">
